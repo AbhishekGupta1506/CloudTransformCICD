@@ -1,21 +1,43 @@
 pipeline {
-	agent none
-	stages {
-		stage('Run Tests') {
+  agent none 
+  stages {
+		stage('Install products') {
 			parallel {
-				stage('Test On Windows') {
-					//agent { label "windows" }
+				stage('Install OnPremise Designer') {
+					agent {
+						label 'OnPremDesigner'
+					}
 					steps {
-					echo "run-tests.bat"
+						echo "hello OnPremDesigner"
 					}
 				}
-				stage('Test On Linux') {
-				//	agent { label "linux" }
+
+				stage ('Install CTP on cloud setup'){
+					agent {
+						label 'CTP'
+					}
 					steps {
-					echo "run-tests.sh"
+						echo "hello CTP"
 					}
 				}
+				
+				stage ('Install IS + UM on cloud setup'){
+					agent{label 'ISUM'}
+					steps {
+						echo "hello IS + UM"
+					}
+				}
+
+			}
+	  }
+
+		stage('Run tests') {
+			agent{
+				label 'OnPremDesigner'
+			}
+			steps {
+				echo "Run the the test cases here"
 			}
 		}
-	}
+  }
 }
