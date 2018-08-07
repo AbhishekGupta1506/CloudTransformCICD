@@ -4,6 +4,19 @@ pipeline {
 
 		stage('Cleanup products') {
 			parallel {
+
+      stage('Cleanup Test') {
+					agent {
+						label 'master'
+					}
+					steps {
+						script {
+							echo "Shutdown CCE"
+							sh '/home/saguser/SoftwareAG103/profiles/CCE/bin/shutdown.sh'
+						}
+					}
+				}
+
 				stage('Cleanup OnPremise Designer') {
 					agent {
 						label 'OnPremDesigner'
