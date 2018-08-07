@@ -60,6 +60,19 @@ pipeline {
 
 		stage('Install products') {
 			parallel {
+
+				stage('Install Test') {
+					agent {
+						label 'master'
+					}
+					environment{
+						softwareagInstallation="/home/saguser/SoftwareAG103"
+					}
+					steps {
+						sh "${env.softwareagInstallation}/profiles/CCE/bin/startup.sh"
+					}
+				}
+
 				stage('Install OnPremise Designer') {
 					agent {
 						label 'OnPremDesigner'
