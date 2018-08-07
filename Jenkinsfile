@@ -41,9 +41,9 @@ pipeline {
 		}
   }
 
-	post {
-		always {
+	post {	
 			steps{
+				always {
 						mail to: 'abg@softwareag.com'
 						subject: "CloudTransformation Pipeline complated: ${currentBuild.fullDisplayName}"
 						body: "checkout the report: ${env.BUILD_URL}"
