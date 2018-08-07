@@ -45,7 +45,7 @@ pipeline {
 				always {
 						//mail to: 'abg@softwareag.com, mjan@softwareag.com, mosy@softwareag.com, meea@softwareag.com, inra@softwareag.com',
 						mail to: 'abg@softwareag.com',
-						subject: "CloudTransformation Pipeline completed: ${currentBuild.fullDisplayName}",
+						subject: "CloudTransformation Pipeline completed -- status: ${buildStatus} JobName: ${env.JOB_NAME} BuildNumber: ${env.BUILD_NUMBER}",
 						body: "checkout the report: ${env.BUILD_URL}"
 			}
 	}
