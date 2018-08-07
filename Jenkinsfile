@@ -1,4 +1,5 @@
 pipeline {
+	agent { label none }
     stages{
       stage('Install OnPremise Designer') {
        agent {
