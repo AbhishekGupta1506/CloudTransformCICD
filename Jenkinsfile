@@ -9,10 +9,13 @@ pipeline {
 					agent {
 						label 'master'
 					}
+					environment {
+						softwareagInstallation="/home/saguser/SoftwareAG103"
+					}
 					steps {
 						script {
 							echo "Shutdown CCE"
-							sh '/home/saguser/SoftwareAG103/profiles/CCE/bin/shutdown.sh'
+							sh '${env.softwareagInstallation}/profiles/CCE/bin/shutdown.sh'
 						}
 					}
 				}
