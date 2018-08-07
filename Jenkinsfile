@@ -9,7 +9,7 @@ pipeline {
 						label 'OnPremDesigner'
 					}
 					steps {
-						script{
+						script {
 							echo "cleanup OnPremDesigner"
 							sh "$pwd"
 						}
@@ -21,7 +21,7 @@ pipeline {
 						label 'CTP'
 					}
 					steps {
-						script{
+						script {
 							echo "Cleanup CTP"
 							sh "$pwd"
 						}
@@ -32,7 +32,7 @@ pipeline {
 				stage ('Cleanup IS + UM on cloud setup'){
 					agent{label 'ISUM'}
 					steps {
-						script{
+						script {
 							echo "Cleanup IS + UM"
 							sh "$pwd"
 						}
