@@ -16,6 +16,7 @@ pipeline {
 						script {
 							echo "Shutdown CCE"
 							sh "${env.softwareagInstallation}/profiles/CCE/bin/shutdown.sh"
+							sh "rm -rf ${env.softwareagInstallation}/profiles/CCE/logs/"
 						}
 					}
 				}
