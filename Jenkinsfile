@@ -11,7 +11,7 @@ pipeline {
 					steps {
 						script {
 							echo "cleanup OnPremDesigner"
-							sh "$pwd"
+							//sh "$pwd"
 						}
 					}
 				}
@@ -23,7 +23,7 @@ pipeline {
 					steps {
 						script {
 							echo "Cleanup CTP"
-							sh "$pwd"
+						//	sh "$pwd"
 						}
 						
 					}
@@ -34,7 +34,7 @@ pipeline {
 					steps {
 						script {
 							echo "Cleanup IS + UM"
-							sh "$pwd"
+							//sh "$pwd"
 						}
 					}
 				}
