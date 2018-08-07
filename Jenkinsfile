@@ -1,6 +1,46 @@
 pipeline {
   agent none 
   stages {
+
+		stage('Cleanup products') {
+			parallel {
+				stage('Cleanup OnPremise Designer') {
+					agent {
+						label 'OnPremDesigner'
+					}
+					steps {
+						script{
+							echo "cleanup OnPremDesigner"
+							sh "$pwd"
+						}
+					}
+				}
+
+				stage ('Cleanup CTP on cloud setup'){
+					agent {
+						label 'CTP'
+					}
+					steps {
+						script{
+							echo "Cleanup CTP"
+							sh "$pwd"
+						}
+						
+					}
+				}
+				
+				stage ('Cleanup IS + UM on cloud setup'){
+					agent{label 'ISUM'}
+					steps {
+						script{
+							echo "Cleanup IS + UM"
+							sh "$pwd"
+						}
+					}
+				}
+			}
+	  }
+
 		stage('Install products') {
 			parallel {
 				stage('Install OnPremise Designer') {
