@@ -1,9 +1,9 @@
 pipeline {
-	agent { label none }
+	agent none 
     stages{
       stage('Install OnPremise Designer') {
        agent {
-        label CTP
+        label 'CTP'
        }
        steps{
         echo "hello Designer"
