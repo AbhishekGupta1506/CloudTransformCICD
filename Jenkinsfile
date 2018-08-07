@@ -15,7 +15,7 @@ pipeline {
 					steps {
 						script {
 							echo "Shutdown CCE"
-							sh '${env.softwareagInstallation}/profiles/CCE/bin/shutdown.sh'
+							sh "${env.softwareagInstallation}/profiles/CCE/bin/shutdown.sh"
 						}
 					}
 				}
