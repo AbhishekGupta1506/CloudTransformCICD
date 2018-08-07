@@ -43,8 +43,9 @@ pipeline {
 
 	post {	
 				always {
-						mail to: 'abg@softwareag.com, mjan@softwareag.com, mosy@softwareag.com, meea@softwareag.com',
-						subject: "CloudTransformation Pipeline complated: ${currentBuild.fullDisplayName}",
+						//mail to: 'abg@softwareag.com, mjan@softwareag.com, mosy@softwareag.com, meea@softwareag.com, inra@softwareag.com',
+						mail to: 'abg@softwareag.com',
+						subject: "CloudTransformation Pipeline completed: ${currentBuild.fullDisplayName}",
 						body: "checkout the report: ${env.BUILD_URL}"
 			}
 	}
