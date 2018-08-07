@@ -11,7 +11,7 @@ pipeline {
 					steps {
 						script {
 							echo "cleanup OnPremDesigner"
-							//sh "$pwd"
+							sh 'echo "$pwd"'
 						}
 					}
 				}
