@@ -12,7 +12,7 @@ pipeline {
 					steps {
 						script {
 							echo "SVN checkout"
-							svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
+							//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
 						}
 					}
 				}
