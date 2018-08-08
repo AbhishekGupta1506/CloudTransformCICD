@@ -1,13 +1,15 @@
 pipeline {
     agent any 
-    triggers { pollSCM('H */60 * * 1-5') }
+    //triggers { pollSCM('H */60 * * 1-5') }
     options {
         buildDiscarder(logRotator(numToKeepStr:'10'))
         disableConcurrentBuilds()
         skipDefaultCheckout() // FIXME: resolve default git checkout problem!
     }
 	tools {
-        jdk 'jdk-1.8' 
+        jdk 'jdk-1.8'
+		gradle 'gradle-3.4.1'
+
     }
 	environment {
 						workspace="/home/saguser/CloudTransform/"
@@ -32,7 +34,7 @@ pipeline {
 						}
 					}
 			}
-		stage('Cleanup products') {
+	/*	stage('Cleanup products') {
 			parallel {
 
       	stage('Cleanup Test') {
@@ -86,9 +88,9 @@ pipeline {
 					}
 				}
 			}
-	  }
+	  }*/
 
-		stage('Install products') {
+		/*stage('Install products') {
 			parallel {
 
 				stage('Install Test') {
@@ -117,7 +119,13 @@ pipeline {
 						label 'CTP'
 					}
 					steps {
-						echo "hello CTP"
+						script {
+							dir("${workspace}/Automation"){
+								echo "CTP installation started"
+
+
+							}
+						}
 					}
 				}
 				
@@ -129,16 +137,16 @@ pipeline {
 				}
 
 			}
-	  }
+	  }*/
 
-		stage('Run tests') {
+		/*stage('Run tests') {
 			agent{
 				label 'OnPremDesigner'
 			}
 			steps {
 				echo "Run the the test cases here"
 			}
-		}
+		}*/
   }
 
 	post {	
