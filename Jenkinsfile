@@ -10,7 +10,7 @@ pipeline {
         jdk 'jdk-1.8' 
     }
 	environment {
-						workspace="~/CloudTransform/"
+						workspace="/home/saguser/CloudTransform/"
 				}
     stages {
 
