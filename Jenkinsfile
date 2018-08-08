@@ -13,7 +13,7 @@ pipeline {
 						script {
 							echo "SVN checkout"
 							//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
-							checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'svn-server', local: '.', remote: 'http://abg:Siqa@28011506@svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment']]])
+							checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'svn-server', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment']]])
 						}
 					}
 				}
