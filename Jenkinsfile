@@ -1,23 +1,34 @@
 pipeline {
-  agent none 
-  stages {
+    agent any 
+    triggers { pollSCM('H */60 * * 1-5') }
+    options {
+        buildDiscarder(logRotator(numToKeepStr:'10'))
+        disableConcurrentBuilds()
+        skipDefaultCheckout() // FIXME: resolve default git checkout problem!
+    }
+	tools {
+        jdk 'jdk-1.8' 
+    }
+	environment {
+						workspace="~/CloudTransform/"
+				}
+    stages {
 
 		stage('Checkout CloudDeployment Automation project') {
-					agent {
-						label 'master'
-					}
-					environment {
-						workspace="/home/saguser/CloudTransform/"
-					}
+					//environment {
+					//	workspace="/home/saguser/CloudTransform/"
+					//}
 					steps {
 						script {
-							echo "SVN checkout started"
-							//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
-							checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment']]])
-							echo "SVN checkout done"
+							dir('${workspace}'){
+								echo "SVN checkout started"
+								//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
+								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment']]])
+								echo "SVN checkout done"
+							}
 						}
 					}
-				}
+			}
 		stage('Cleanup products') {
 			parallel {
 
