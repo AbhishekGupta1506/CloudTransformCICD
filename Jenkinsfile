@@ -28,11 +28,16 @@ pipeline {
 					steps {
 						script {
 							dir('/opt/install'){
+
+								echo "Started: checking out the GIT project"
+								sh 'git clone --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+								echo "Done: checking out the GIT project"
 								echo "SVN checkout started"
 								//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
 								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
 								echo "SVN checkout done"
 								sh 'chmod 777 *'
+								
 								echo "Run gradlew -b download.gradle download"
 								sh './gradlew -b download.gradle download'
 								echo "Completed gradlew -b download.gradle download"
