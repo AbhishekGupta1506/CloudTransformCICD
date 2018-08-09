@@ -21,11 +21,11 @@ pipeline {
 					//	workspace="/home/saguser/CloudTransform/"
 					//}
 					agent {
-						label 'master'
+						label 'Tools'
 					}
 					steps {
 						script {
-							dir("${workspace}/Automation"){
+							dir('/opt/install'){
 								echo "SVN checkout started"
 								//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
 								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment']]])
