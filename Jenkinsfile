@@ -37,6 +37,8 @@ pipeline {
 					}
 					steps {
 						script {
+							try{
+
 							echo "Start: shutdown CTP"
 							sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
 							echo "Completed: shutdown CTP"
@@ -48,7 +50,12 @@ pipeline {
 							echo "Start: SPM"
 							sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
 							echo "Completed: shutdown SPM"
+							}
+							
+						catch(Exception e){
 
+							echo "shutdowe failed"
+						}
 
 							//disable because IS installation is failing so UM is installed yet
 							/*echo "Start: UM"
