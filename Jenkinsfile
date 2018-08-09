@@ -148,15 +148,15 @@ pipeline {
 					steps {
 						dir('/opt/install'){
 							echo "Started: CTP installation"
-							//sh './gradlew installCTP -x validate'
+							sh './gradlew installCTP -x validate'
 							echo "Completed: CTP installation"
 
 							echo "Started: IS installation"
-						//	sh './gradlew installIS -x validate'
+							sh './gradlew installIS -x validate'
 							echo "Completed: IS installation"
 
 							echo "Started: UM installation"
-							//sh './gradlew installUM -x validate'
+							sh './gradlew installUM -x validate'
 							echo "Completed: UM installation"
 						}
 					}
