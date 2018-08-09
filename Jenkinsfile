@@ -1,5 +1,5 @@
 pipeline {
-    agent any 
+    agent {label 'Tools'} 
     //triggers { pollSCM('H */60 * * 1-5') }
     options {
         buildDiscarder(logRotator(numToKeepStr:'10'))
