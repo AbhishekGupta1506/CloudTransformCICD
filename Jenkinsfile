@@ -143,6 +143,7 @@ pipeline {
 				}
 			}*/
 	  }
+		}
 
 		stage('Install products') {
 			parallel {
@@ -216,7 +217,6 @@ pipeline {
 				echo "Run the the test cases here"
 			}
 		}*/
-  }
 
 	post {	
 				always {
@@ -226,4 +226,5 @@ pipeline {
 						body: "checkout the report: ${env.BUILD_URL}"
 			}
 	}
+}
 }
