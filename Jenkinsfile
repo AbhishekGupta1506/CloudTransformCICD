@@ -30,6 +30,9 @@ pipeline {
 								//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
 								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment']]])
 								echo "SVN checkout done"
+								echo "Run gradlew -b download.gradle download"
+								sh './gradlew -b download.gradle download'
+								echo "Completed gradlew -b download.gradle download"
 							}
 						}
 					}
