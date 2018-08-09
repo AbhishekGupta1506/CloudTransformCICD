@@ -6,6 +6,8 @@ pipeline {
         disableConcurrentBuilds()
         skipDefaultCheckout() // FIXME: resolve default git checkout problem!
     }
+
+	//tools is ignore if agent is none
 	tools {
         jdk 'jdk-1.8'
 		gradle 'gradle-3.4.1'
@@ -41,7 +43,7 @@ pipeline {
 	/*	stage('Cleanup products') {
 			parallel {
 
-      	stage('Cleanup Test') {
+      	stage('Cleanup MySQL') {
 					agent {
 						label 'master'
 					}
@@ -94,31 +96,27 @@ pipeline {
 			}
 	  }*/
 
-		/*stage('Install products') {
+		stage('Install products') {
 			parallel {
 
-				stage('Install Test') {
+				/*stage('Setup MySQL') {
 					agent {
-						label 'master'
-					}
-					environment{
-						softwareagInstallation="/home/saguser/SoftwareAG103"
+						label 'MySQL'
 					}
 					steps {
-						sh "${env.softwareagInstallation}/profiles/CCE/bin/startup.sh"
+						echo "hello MySQL"
 					}
-				}
-
-				stage('Install OnPremise Designer') {
+				}*/
+				/*stage('Install OnPremise Designer') {
 					agent {
 						label 'OnPremDesigner'
 					}
 					steps {
 						echo "hello OnPremDesigner"
 					}
-				}
+				}*/
 
-				stage ('Install CTP on cloud setup'){
+				/*stage ('Install CTP on cloud setup'){
 					agent {
 						label 'CTP'
 					}
@@ -131,17 +129,36 @@ pipeline {
 							}
 						}
 					}
-				}
-				
-				stage ('Install IS + UM on cloud setup'){
+				}*/
+
+				/*stage ('Install IS + UM on cloud setup'){
 					agent{label 'ISUM'}
 					steps {
 						echo "hello IS + UM"
 					}
+				}*/
+				
+				stage ('Install IS + UM + CTP on cloud setup'){
+					agent{label 'Tools'}
+					steps {
+						dir('/opt/install'){
+							echo "Started: CTP installation"
+							sh './gradlew installCTP -x validate'
+							echo "Completed: CTP installation"
+
+							echo "Started: IS installation"
+							sh './gradlew installIS -x validate'
+							echo "Completed: IS installation"
+
+							echo "Started: UM installation"
+							sh './gradlew installUM -x validate'
+							echo "Completed: UM installation"
+						}
+					}
 				}
 
 			}
-	  }*/
+	  }
 
 		/*stage('Run tests') {
 			agent{
