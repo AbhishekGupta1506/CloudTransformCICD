@@ -18,33 +18,7 @@ pipeline {
 				}
     stages {
 
-		stage('Checkout CloudDeployment Automation project') {
-					//environment {
-					//	workspace="/home/saguser/CloudTransform/"
-					//}
-					agent {
-						label 'Tools'
-					}
-					steps {
-						script {
-							dir('/opt/install'){
 
-								echo "Started: checking out the GIT p/opt/install/roject"
-								sh 'git clone --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
-								echo "Done: checking out the GIT project"
-								echo "SVN checkout started"
-								//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
-								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
-								echo "SVN checkout done"
-								sh 'chmod 777 *'
-								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/gradle.properties /opt/install'
-								echo "Run gradlew -b download.gradle download"
-								sh './gradlew -b download.gradle download'
-								echo "Completed gradlew -b download.gradle download"
-							}
-						}
-					}
-			}
 		stage('Cleanup products') {
 			parallel {
 
@@ -91,7 +65,7 @@ pipeline {
 						}
 					}
 				}
-      	/*stage('Cleanup MySQL') {
+				/*stage('Cleanup MySQL') {
 					agent {
 						label 'master'
 					}
@@ -140,11 +114,36 @@ pipeline {
 							//sh "$pwd"
 						}
 					}
-				}
-			}*/
-	  }
+				}*/
+	  		}
 		}
+		stage('Checkout CloudDeployment Automation project') {
+					//environment {
+					//	workspace="/home/saguser/CloudTransform/"
+					//}
+					agent {
+						label 'Tools'
+					}
+					steps {
+						script {
+							dir('/opt/install'){
 
+								echo "Started: checking out the GIT p/opt/install/roject"
+								sh 'git clone --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+								echo "Done: checking out the GIT project"
+								echo "SVN checkout started"
+								//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
+								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
+								echo "SVN checkout done"
+								sh 'chmod 777 *'
+								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/gradle.properties /opt/install'
+								echo "Run gradlew -b download.gradle download"
+								sh './gradlew -b download.gradle download'
+								echo "Completed gradlew -b download.gradle download"
+							}
+						}
+					}
+			}
 		stage('Install products') {
 			parallel {
 
@@ -208,7 +207,6 @@ pipeline {
 
 			}
 	  }
-
 		/*stage('Run tests') {
 			agent{
 				label 'OnPremDesigner'
@@ -217,7 +215,7 @@ pipeline {
 				echo "Run the the test cases here"
 			}
 		}*/
-
+	}
 	post {	
 				always {
 						//mail to: 'abg@softwareag.com, mjan@softwareag.com, mosy@softwareag.com, meea@softwareag.com, inra@softwareag.com',
@@ -226,5 +224,4 @@ pipeline {
 						body: "checkout the report: ${env.BUILD_URL}"
 			}
 	}
-}
 }
