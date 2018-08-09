@@ -45,10 +45,53 @@ pipeline {
 						}
 					}
 			}
-	/*	stage('Cleanup products') {
+		stage('Cleanup products') {
 			parallel {
 
-      	stage('Cleanup MySQL') {
+				stage('cleanup Tools'){
+					steps{
+						dir('/opt/install/'){
+							sh 'rm -rf *'
+						}
+						
+					}
+					
+				}
+				stage('Cleanup Product') {
+					agent {
+						label 'Tools'
+					}
+					steps {
+						script {
+							echo "Start: shutdown CTP"
+							sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
+							echo "Completed: shutdown CTP"
+
+							echo "Start: IS"
+							sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
+							echo "Completed: shutdown IS"
+
+							echo "Start: SPM"
+							sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
+							echo "Completed: shutdown SPM"
+
+
+							//disable because IS installation is failing so UM is installed yet
+							/*echo "Start: UM"
+							sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
+							echo "Completed: shutdown SPM"*/
+
+							dir('/opt/softwareag') {
+								sh 'rm -rf *'
+							}
+
+							dir('/opt/SAGUpdateManage/'){
+								sh 'rm -rf *'
+							}
+						}
+					}
+				}
+      	/*stage('Cleanup MySQL') {
 					agent {
 						label 'master'
 					}
@@ -98,8 +141,8 @@ pipeline {
 						}
 					}
 				}
-			}
-	  }*/
+			}*/
+	  }
 
 		stage('Install products') {
 			parallel {
