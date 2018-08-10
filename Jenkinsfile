@@ -102,10 +102,10 @@ pipeline {
 					steps{
 						dir('C:/Cloud/'){
 							//sh 'ls -l'
-							echo "cleanup C:/CloudCheckOut dir"
-							bat 'rmdir C:/CloudCheckOut /s /q'
-							echo "cleanup C:/CloudCheckOut@tmp dir"
-							bat 'rmdir C:/CloudCheckOut@tmp /s /q'
+							echo "cleanup C:\\CloudCheckOut dir"
+							bat 'rmdir "C:\\CloudCheckOut" /s /q'
+							echo "cleanup C:\\CloudCheckOut@tmp dir"
+							bat 'rmdir "C:\\CloudCheckOut@tmp" /s /q'
 							//sh 'ls -l'
 						}
 						
