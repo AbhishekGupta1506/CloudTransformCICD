@@ -1,0 +1,10 @@
+#Mon Jul 30 16:20:12 PDT 2018
+Username=latest
+StartMenuFolder=Software AGCloud
+InstallProducts=e2ei/11/.LATEST/Infrastructure/WISSharedLibs,e2ei/11/.LATEST/DES/DesignerJCR,e2ei/11/.LATEST/SCG/tppSAML2,e2ei/11/.LATEST/SCG/tppWS,e2ei/11/.LATEST/DES/LDev,e2ei/11/.LATEST/DES/Eclipse,e2ei/11/.LATEST/SCG/SCGCommon,e2ei/11/.LATEST/SCG/WSSCore,e2ei/11/.LATEST/LICUtil/LICUtil,e2ei/11/.LATEST/SCG/tppModelling,e2ei/11/.LATEST/SCG/tppSEC,e2ei/11/.LATEST/DES/BPMMetadata,e2ei/11/.LATEST/integrationServer/integrationServerMigrationFrameworkLib,e2ei/11/.LATEST/SCG/tppParsers,e2ei/11/.LATEST/SCG/log4j,e2ei/11/.LATEST/SCG/tppGf,e2ei/11/.LATEST/SCG/tppMisc,e2ei/11/.LATEST/DES/LARDesigner,e2ei/11/.LATEST/MFC/MfcAll,e2ei/11/.LATEST/LICSharedLibsJava/LICSharedLibsJava,e2ei/11/.LATEST/SCG/tppGfJaxb,e2ei/11/.LATEST/DES/DesignerModeling,e2ei/11/.LATEST/SCG/tppSwagger,e2ei/11/.LATEST/SCG/tppCommons,e2ei/11/.LATEST/INMJ/INMSharedLibs,e2ei/11/.LATEST/License/license,e2ei/11/.LATEST/Infrastructure/sjp,e2ei/11/.LATEST/DES/DesignerCPP
+InstallDir=C\:\\SoftwareAGCloud
+LicenseAgree=Accept
+InstallLocProducts=
+Password=latest
+HostName=VMSIQACLOUD02.eur.ad.sag
+ServerURL=http\://aquarius-blr.eur.ad.sag/cgi-bin/dataserve103oct2018_SIC.cgi

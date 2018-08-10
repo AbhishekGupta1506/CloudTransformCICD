@@ -133,7 +133,7 @@ pipeline {
 		stage('Checkout jobs'){
 			parallel{
 
-				/*stage('Checkout CloudDeployment Automation project') {
+				stage('Checkout CloudDeployment Automation project') {
 					//environment {
 					//	workspace="/home/saguser/CloudTransform/"
 					//}
@@ -159,7 +159,7 @@ pipeline {
 							}
 						}
 					}
-				}*/
+				}
 				stage('checkout designer'){
 					agent{
 						label 'Designer'
@@ -168,7 +168,7 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut'){
 								echo "Started: checking out the GIT project"
-								bat 'git clone  --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+								bat 'git clone --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								echo "Completed: checking out the GIT project"
 							}
 						}
@@ -224,7 +224,7 @@ pipeline {
 					steps {
 						dir('/opt/install'){
 							echo "Started: CTP installation"
-							//sh './gradlew installCTP -x validate'
+							sh './gradlew installCTP -x validate'
 							echo "Completed: CTP installation"
 
 							//removing .svn folder because of IS failure 
@@ -233,12 +233,25 @@ pipeline {
 								sh 'rm -rf *'
 							}
 							echo "Started: IS installation"
-							//sh './gradlew installIS -x validate'
+							sh './gradlew installIS -x validate'
 							echo "Completed: IS installation"
 
 							echo "Started: UM installation"
-							//sh './gradlew installUM -x validate'
+							sh './gradlew installUM -x validate'
 							echo "Completed: UM installation"
+						}
+					}
+				}
+				stage('Installating the Designer') {
+
+					agent {
+						label Designer
+					}
+					steps{
+						script{
+							dir('C:/CloudCheckOut/CloudTransformCICD/installer'){
+								bat 'ant install.designer'
+							}
 						}
 					}
 				}
