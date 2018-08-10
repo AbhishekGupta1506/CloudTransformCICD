@@ -22,13 +22,13 @@
 		<echo message="${installer.home}/designerScript.txt" />
 		<parsefile file="${installer.home}/designerScript.txt" installerfile="true" />
 		<java jar="${installer.home}/SoftwareAGInstaller_STATIC.jar" maxmemory="512m" failonerror="false" fork="true">
-			<arg value="-readscript"/>
+			<arg value="-readScript"/>
 			<arg value="${installer.home}/designerScript.txt"/>
 			<arg value="-scriptErrorInteract"/>
 			<arg value="yes"/>
 			<arg value="-debugLvl"/>
 			<arg value="verbose"/>
-			<arg value="-console"/>
+			<!--arg value="-console"/-->
 		</java>	
 	</target>	
 </project>
