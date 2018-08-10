@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'Tools'} 
+    agent {label 'any'} 
     //triggers { pollSCM('H */60 * * 1-5') }
     options {
         buildDiscarder(logRotator(numToKeepStr:'10'))
@@ -23,6 +23,9 @@ pipeline {
 			parallel {
 
 				stage('cleanup MySql'){
+					agent {
+						label 'MySql'
+					}
 					steps{
 						dir('/opt/install/'){
 							//sh 'ls -l'
@@ -146,7 +149,8 @@ pipeline {
 					//	workspace="/home/saguser/CloudTransform/"
 					//}
 					agent {
-						label 'Tools'
+						//label 'MySql && CTP && ISUM'
+						label 'CTP'
 					}
 					steps {
 						script {
@@ -187,48 +191,9 @@ pipeline {
 		
 		stage('Install products') {
 			parallel {
-
-				/*stage('Setup MySQL') {
-					agent {
-						label 'MySQL'
-					}
-					steps {
-						echo "hello MySQL"
-					}
-				}*/
-				/*stage('Install OnPremise Designer') {
-					agent {
-						label 'OnPremDesigner'
-					}
-					steps {
-						echo "hello OnPremDesigner"
-					}
-				}*/
-
-				/*stage ('Install CTP on cloud setup'){
-					agent {
-						label 'CTP'
-					}
-					steps {
-						script {
-							dir("${workspace}/Automation"){
-								echo "CTP installation started"
-
-
-							}
-						}
-					}
-				}*/
-
-				/*stage ('Install IS + UM on cloud setup'){
-					agent{label 'ISUM'}
-					steps {
-						echo "hello IS + UM"
-					}
-				}*/
 				
-				stage ('Install IS + UM + CTP on cloud setup'){
-					agent{label 'Tools'}
+				stage ('Install CTP on cloud setup'){
+					agent{label 'CTP'}
 					steps {
 						dir('/opt/install'){
 							echo "Started: CTP installation"
@@ -250,7 +215,38 @@ pipeline {
 						}
 					}
 				}
-				stage('Installating the Designer') {
+				stage ('Install IS+UM on cloud setup'){
+					agent{label 'ISUM'}
+					steps {
+						dir('/opt/install'){
+							//removing .svn folder because of IS failure 
+							/*dir('/opt/install/os_independent/packages'){
+
+								sh 'rm -rf *'
+							}
+							echo "Started: IS installation"
+							sh './gradlew installIS -x validate'
+							echo "Completed: IS installation"
+
+							echo "Started: UM installation"
+							sh './gradlew installUM -x validate'
+							echo "Completed: UM installation"*/
+							echo "Started: Install IS+UM on cloud setup"
+							echo "Completed: Install IS+UM on cloud setup"
+						}
+					}
+				}
+				stage ('Run MySql script on cloud setup'){
+					agent{label 'MySql'}
+					steps {
+						dir('/opt/install'){
+							echo "Started: MySql script"
+							echo "Completed: MySql script"
+						}
+					}
+				}
+
+				stage('Installing the Designer') {
 
 					agent {
 						label 'Designer'
