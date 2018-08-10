@@ -42,7 +42,7 @@ pipeline {
 						label 'Designer'
 					}
 					steps{
-						dir('C:/Cloud/'){
+						//dir('C:/Cloud/'){
 							//sh 'ls -l'
 
 							if (fileExists('C:\\CloudCheckOut')) {
@@ -61,8 +61,8 @@ pipeline {
 							
 							
 
-						}
-						dir('C:/Cloud') {
+						//}
+						//dir('C:/Cloud') {
 									
 								if (fileExists('C:\\SoftwareAGCloud')) {
 								echo "cleanup Designer"
@@ -70,7 +70,7 @@ pipeline {
 								} else {
 								echo "Not Found C:\\SoftwareAGCloud dir"
 								}						
-						}
+						//}
 						
 					}
 					
