@@ -15,7 +15,7 @@ pipeline {
     }
 	environment {
 						workspace="/home/saguser/CloudTransform/"
-						PID
+						PID=null
 				}
     stages {
 
@@ -92,7 +92,7 @@ pipeline {
 									sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
 									sh 'PID=$!' //catch the last PID, here from command1
 									sh 'env.PID=$!' //catch the last PID, here from command1
-									echo '${env.PID}'
+									echo 'PID is ${env.PID}'
 									sh 'wait ${env.PID}' //wait for command1, in background, to end
 									echo "Completed: shutdown CTP"
 								}
@@ -103,6 +103,7 @@ pipeline {
 									echo "Start: SPM shutdown"
 									sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
 									sh 'env.PID=$!' //catch the last PID, here from command1
+									echo 'PID is ${env.PID}'
 									sh 'wait ${env.PID}' //wait for command1, in background, to end
 									echo "Completed: shutdown SPM"
 								}
@@ -115,7 +116,7 @@ pipeline {
 										echo "Start: IS"
 										sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
 										sh 'env.PID=$!' //catch the last PID, here from command1
-										echo '${env.PID}'
+										echo 'PID is ${env.PID}'
 										sh 'wait ${env.PID}' //wait for command1, in background, to end
 										echo "Completed: shutdown IS"
 									}
@@ -127,7 +128,7 @@ pipeline {
 										echo "Start: UM"
 										sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
 										sh 'env.PID=$!' //catch the last PID, here from command1
-										echo '${env.PID}'
+										echo 'PID is ${env.PID}'
 										sh 'wait ${env.PID}' //wait for command1, in background, to end
 										echo "Completed: shutdown UM"
 									}
