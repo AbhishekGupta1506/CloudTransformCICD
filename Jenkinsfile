@@ -26,6 +26,7 @@ pipeline {
 					steps{
 						dir('/opt/install/'){
 							//sh 'ls -l'
+							echo "cleanup /opt/install/ dir"
 							sh 'rm -rf *'
 							//sh 'ls -l'
 						}
@@ -64,19 +65,47 @@ pipeline {
 							sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
 							echo "Completed: shutdown SPM"*/
 
-							dir('/opt/softwareag') {
+							dir('/opt/softwareag/') {
 								//sh 'ls -l'
+								echo "cleanup /opt/softwareag dir"
 								sh 'rm -rf *'
 								//sh 'ls -l'
 							}
 
 							dir('/opt/SAGUpdateManage/'){
 								//sh 'ls -l'
+								echo "cleanup /opt/SAGUpdateManage/ dir"
 								sh 'rm -rf *'
 								//sh 'ls -l'
 							}
 						}
 					}
+				}
+
+				stage('Cleanup Designer') {
+					agent {
+						label 'Designer'
+					}
+					steps {
+						script {
+							dir('C:/Cloud') {
+							echo "cleanup Designer"
+							bat 'rmdir C:\SoftwareAGCloud /s /q'
+						}
+					}
+				}
+				stage('cleanup Designer Tools'){
+					steps{
+						dir('C:/Cloud/'){
+							//sh 'ls -l'
+							echo "cleanup /opt/install/ dir"
+							bat 'rmdir C:\CloudCheckOut /s /q'
+							bat 'rmdir C:\CloudCheckOut@tmp /s /q'
+							//sh 'ls -l'
+						}
+						
+					}
+					
 				}
 				/*stage('Cleanup MySQL') {
 					agent {
