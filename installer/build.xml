@@ -19,6 +19,7 @@
 	
 	<target name="install.designer">
 		<antcall target="get.latest.installer"/>
+		<echo msg="${installer.home}/designerScript.txt" />
 		<parsefile file="${installer.home}/designerScript.txt" installerfile="true" />
 		<java jar="${installer.home}/SoftwareAGInstaller_STATIC.jar" maxmemory="512m" failonerror="false" fork="true">
 			<arg value="-readscript"/>
