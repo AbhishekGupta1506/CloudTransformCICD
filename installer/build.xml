@@ -1,0 +1,20 @@
+<project name="CloudTransformation_Automation" basedir=".">
+	<target name="get.latest.installer">
+		<echo message="Downloading the installer" />
+		<get src="http://aquarius_blr/PDShare/WWW/dataserve103oct2018_SIC/data/SoftwareAGInstaller.jar" dest="C:/CloudCheckOut/installer/SoftwareAGInstaller_STATIC.jar" ignoreerrors="false" />
+	</target>
+
+	<target name="install.designer">
+		<antcall target="get.latest.installer"/>
+		<parsefile file="C:/CloudCheckOut/installer/designerScript.txt" installerfile="true" />
+		<java jar="C:/CloudCheckOut/installer/SoftwareAGInstaller_STATIC.jar" maxmemory="512m" failonerror="false" fork="true">
+			<arg value="-readscript"/>
+			<arg value="C:/CloudCheckOut/installer/designerScript.txt"/>
+			<arg value="-scriptErrorInteract"/>
+			<arg value="yes"/>
+			<arg value="-debugLvl"/>
+			<arg value="verbose"/>
+			<arg value="-console"/>
+		</java>	
+	</target>	
+</project>

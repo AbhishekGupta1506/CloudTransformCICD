@@ -25,9 +25,9 @@ pipeline {
 				stage('cleanup Tools'){
 					steps{
 						dir('/opt/install/'){
-							sh 'ls -l'
+							//sh 'ls -l'
 							sh 'rm -rf *'
-							sh 'ls -l'
+							//sh 'ls -l'
 						}
 						
 					}
@@ -65,15 +65,15 @@ pipeline {
 							echo "Completed: shutdown SPM"*/
 
 							dir('/opt/softwareag') {
-								sh 'ls -l'
+								//sh 'ls -l'
 								sh 'rm -rf *'
-								sh 'ls -l'
+								//sh 'ls -l'
 							}
 
 							dir('/opt/SAGUpdateManage/'){
-								sh 'ls -l'
+								//sh 'ls -l'
 								sh 'rm -rf *'
-								sh 'ls -l'
+								//sh 'ls -l'
 							}
 						}
 					}
@@ -207,6 +207,11 @@ pipeline {
 							sh './gradlew installCTP -x validate'
 							echo "Completed: CTP installation"
 
+							//removing .svn folder because of IS failure 
+							dir('/opt/install/os_independent/packages'){
+
+								sh 'rm -rf *'
+							}
 							echo "Started: IS installation"
 							sh './gradlew installIS -x validate'
 							echo "Completed: IS installation"
