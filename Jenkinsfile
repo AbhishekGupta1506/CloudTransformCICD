@@ -26,8 +26,14 @@ pipeline {
 					steps{
 						dir('/opt/install/'){
 							//sh 'ls -l'
-							echo "cleanup /opt/install/ dir"
-							sh 'rm -rf *'
+							try{
+								echo "cleanup /opt/install/ dir"
+								sh 'rm -rf *'
+							}
+							catch(Exception e){
+								echo "cleanup /opt/install/ dir failed"
+							}
+							
 							//sh 'ls -l'
 						}
 						
@@ -67,15 +73,28 @@ pipeline {
 
 							dir('/opt/softwareag/') {
 								//sh 'ls -l'
-								echo "cleanup /opt/softwareag dir"
-								sh 'rm -rf *'
+								try{
+									echo "cleanup /opt/softwareag dir"
+									sh 'rm -rf *'
+								}
+								catch(Exception e){
+
+									echo "cleanup /opt/softwareag dir failed"
+								}
+
 								//sh 'ls -l'
 							}
 
 							dir('/opt/SAGUpdateManage/'){
 								//sh 'ls -l'
-								echo "cleanup /opt/SAGUpdateManage/ dir"
-								sh 'rm -rf *'
+								try{
+									echo "cleanup /opt/SAGUpdateManage/ dir"
+									sh 'rm -rf *'
+								}
+								catch(Exception e){
+									echo "cleanup /opt/SAGUpdateManage/ dir failed"
+								}
+								
 								//sh 'ls -l'
 							}
 						}
@@ -89,8 +108,14 @@ pipeline {
 					steps {
 						script {
 							dir('C:/Cloud') {
-							echo "cleanup Designer"
-							bat 'rmdir "C:\\SoftwareAGCloud" /s /q'
+								try{
+									echo "cleanup Designer"
+									bat 'rmdir "C:\\SoftwareAGCloud" /s /q'
+								}
+								catch(Exception e){
+									echo 'cleanup C:\\SoftwareAGCloud dir failed'
+								}
+							
 						}
 					}
 				}
@@ -102,10 +127,16 @@ pipeline {
 					steps{
 						dir('C:/Cloud/'){
 							//sh 'ls -l'
-							echo "cleanup C:\\CloudCheckOut dir"
-							bat 'rmdir "C:\\CloudCheckOut" /s /q'
-							echo "cleanup C:\\CloudCheckOut@tmp dir"
-							bat 'rmdir "C:\\CloudCheckOut@tmp" /s /q'
+							try{
+									echo "cleanup C:\\CloudCheckOut dir"
+									bat 'rmdir "C:\\CloudCheckOut" /s /q'
+									echo "cleanup C:\\CloudCheckOut@tmp dir"
+									bat 'rmdir "C:\\CloudCheckOut@tmp" /s /q'
+								}
+								catch(Exception e){
+									echo 'cleanup C:\\CloudCheckOut Or C:\\CloudCheckOut@tmp dir failed'
+								}
+							
 							//sh 'ls -l'
 						}
 						
