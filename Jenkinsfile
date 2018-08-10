@@ -90,12 +90,7 @@ pipeline {
 								if (fileExists('/opt/softwareag/profiles/CTP')) {
 									echo "Start: shutdown CTP"
 									sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
-									sh 'PID="$!"' //catch the last PID, here from command1
-									echo 'PID is ${env.PID} ${PID} $PID $env.PID'
-									sh 'PID is ${env.PID} ${PID} $PID $env.PID'
-									echo '$!'
-									sh '$!'
-									sh 'wait ${PID}' //wait for command1, in background, to end
+									sleep 120
 									echo "Completed: shutdown CTP"
 								}
 								else{
@@ -104,9 +99,7 @@ pipeline {
 								if (fileExists('/opt/softwareag/profiles/SPM')) {
 									echo "Start: SPM shutdown"
 									sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
-									sh 'PID=$!' //catch the last PID, here from command1
-									echo 'PID is ${env.PID} ${PID}'
-									sh 'wait ${PID}' //wait for command1, in background, to end
+									sleep 120
 									echo "Completed: shutdown SPM"
 								}
 								else{
@@ -117,9 +110,7 @@ pipeline {
 									if (fileExists('/opt/softwareag/profiles/IS_default')) {
 										echo "Start: IS"
 										sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
-										sh 'PID=$!' //catch the last PID, here from command1
-										echo 'PID is ${env.PID} ${PID}'
-										sh 'wait ${PID}' //wait for command1, in background, to end
+										sleep 120
 										echo "Completed: shutdown IS"
 									}
 									else{
@@ -129,9 +120,7 @@ pipeline {
 									if (fileExists('/opt/softwareag/UniversalMessaging/server/umserver/bin/')) {
 										echo "Start: UM"
 										sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
-										sh 'PID=$!' //catch the last PID, here from command1
-										echo 'PID is ${env.PID} ${PID}'
-										sh 'wait ${PID}' //wait for command1, in background, to end
+										sleep 120
 										echo "Completed: shutdown UM"
 									}
 									else{
