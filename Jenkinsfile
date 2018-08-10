@@ -130,7 +130,10 @@ pipeline {
 				}*/
 	  		}
 		}
-		stage('Checkout CloudDeployment Automation project') {
+		stage('Checkout jobs'){
+			parallel{
+
+				stage('Checkout CloudDeployment Automation project') {
 					//environment {
 					//	workspace="/home/saguser/CloudTransform/"
 					//}
@@ -156,7 +159,22 @@ pipeline {
 							}
 						}
 					}
+				}
+				stage('checkout designer'){
+					agent{
+						label 'Designer'
+					}
+					steps{
+						script{
+							dir('C:/CloudCheckOut'){
+								sh 'git clone  --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+							}
+						}
+					}
+				}
 			}
+		}
+		
 		stage('Install products') {
 			parallel {
 
