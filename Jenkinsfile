@@ -90,7 +90,7 @@ pipeline {
 						script {
 							dir('C:/Cloud') {
 							echo "cleanup Designer"
-							bat 'rmdir C:/SoftwareAGCloud /s /q'
+							bat 'rmdir "C:\SoftwareAGCloud" /s /q'
 						}
 					}
 				}
