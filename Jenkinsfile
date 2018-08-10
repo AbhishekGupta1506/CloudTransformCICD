@@ -42,6 +42,7 @@ pipeline {
 						label 'Designer'
 					}
 					steps{
+						script{
 						//dir('C:/Cloud/'){
 							//sh 'ls -l'
 
@@ -71,6 +72,7 @@ pipeline {
 								echo "Not Found C:\\SoftwareAGCloud dir"
 								}						
 						//}
+						}
 						
 					}
 					
