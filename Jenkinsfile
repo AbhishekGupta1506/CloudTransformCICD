@@ -183,17 +183,17 @@ pipeline {
 							dir('/opt/softwareag/') {
 								//sh 'ls -l'
 								echo "cleanup /opt/softwareag dir"
-								sh 'rm -rf *'
+								//sh 'rm -rf *'
 							}
 							dir('/opt/SAGUpdateManage/'){
 								//sh 'ls -l'
 								echo "cleanup /opt/SAGUpdateManage/ dir"
-								sh 'rm -rf *'
+								//sh 'rm -rf *'
 							}
 							dir('/opt/install/'){
 								//sh 'ls -l'
 								echo "cleanup checkout /opt/install/ dir"
-								sh 'rm -rf *'
+								//sh 'rm -rf *'
 							}
 						}						
 					}
