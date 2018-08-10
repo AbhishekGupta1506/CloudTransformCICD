@@ -214,10 +214,10 @@ pipeline {
 							sh './gradlew installUM -x validate'
 							echo "Completed: UM installation"
 							//removing .svn folder because of IS failure 
-							dir('/opt/install/os_independent/packages'){
+							dir('/opt/install/os_independent/packages/'){
 
-								sh 'rm -rf *'
-								sh 'ls -l'
+								sh 'rm -rf .svn'
+								sh 'ls -al'
 							}
 							echo "Started: IS installation"
 							sh './gradlew installIS -x validate'
