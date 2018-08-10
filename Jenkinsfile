@@ -161,7 +161,7 @@ pipeline {
 							dir('/opt/install'){
 
 								echo "Started: checking out the GIT /opt/install/project"
-								sh 'git clone --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+								sh 'git clone -b dev --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								echo "Done: checking out the GIT project"
 								echo "SVN checkout started"
 								//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
@@ -184,7 +184,7 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut'){
 								echo "Started: checking out the GIT project in designer setup"
-								bat 'git clone --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+								bat 'git clone -b dev --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								echo "Completed: checking out the GIT project in designer setup"
 							}
 						}
