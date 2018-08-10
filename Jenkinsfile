@@ -67,14 +67,14 @@ pipeline {
 							echo "Cleanup CTP"
 							try{
 								echo "Start: shutdown CTP"
-								sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
+								//sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
 								echo "Completed: shutdown CTP"
 								echo "Start: SPM shutdown"
-								sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
+								//sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
 								echo "Completed: shutdown SPM"
 								//remove this once running on WmCI machines
 								echo "Start: IS"
-								sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
+								//sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
 								echo "Completed: shutdown IS"
 							}
 							catch(Exception e){
