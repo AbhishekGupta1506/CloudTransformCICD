@@ -22,113 +22,19 @@ pipeline {
 		stage('Cleanup products') {
 			parallel {
 
-				stage('cleanup Tools'){
+				stage('cleanup MySql'){
 					steps{
 						dir('/opt/install/'){
 							//sh 'ls -l'
-							echo "cleanup /opt/install/ dir"
+							echo "cleanup checkout /opt/install/ dir"
 							sh 'rm -rf *'
-							/*try{
-								echo "cleanup /opt/install/ dir"
-								sh 'rm -rf *'
-							}
-							catch(Exception e){
-								echo "cleanup /opt/install/ dir failed"
-							}*/
-							
-							//sh 'ls -l'
 						}
 						
 					}
 					
 				}
-				stage('Cleanup Product') {
-					agent {
-						label 'Tools'
-					}
-					steps {
-						script {
-							try{
 
-							echo "Start: shutdown CTP"
-							sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
-							echo "Completed: shutdown CTP"
-
-							echo "Start: IS"
-							sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
-							echo "Completed: shutdown IS"
-
-							echo "Start: SPM"
-							sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
-							echo "Completed: shutdown SPM"
-							}
-							
-						catch(Exception e){
-
-							echo "shutdown failed"
-						}
-
-							//disable because IS installation is failing so UM is installed yet
-							/*echo "Start: UM"
-							sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
-							echo "Completed: shutdown SPM"*/
-
-							dir('/opt/softwareag/') {
-								//sh 'ls -l'
-								echo "cleanup /opt/softwareag dir"
-								sh 'rm -rf *'
-								/*try{
-									echo "cleanup /opt/softwareag dir"
-									sh 'rm -rf *'
-								}
-								catch(Exception e){
-
-									echo "cleanup /opt/softwareag dir failed"
-								}*/
-
-								//sh 'ls -l'
-							}
-
-							dir('/opt/SAGUpdateManage/'){
-								//sh 'ls -l'
-								echo "cleanup /opt/SAGUpdateManage/ dir"
-								sh 'rm -rf *'
-								/*try{
-									echo "cleanup /opt/SAGUpdateManage/ dir"
-									sh 'rm -rf *'
-								}
-								catch(Exception e){
-									echo "cleanup /opt/SAGUpdateManage/ dir failed"
-								}*/
-								
-								//sh 'ls -l'
-							}
-						}
-					}
-				}
-
-				stage('Cleanup Designer') {
-					agent {
-						label 'Designer'
-					}
-					steps {
-						script {
-							dir('C:/Cloud') {
-								echo "cleanup Designer"
-								bat 'rmdir "C:\\SoftwareAGCloud" /s /q'
-								/*try{
-									echo "cleanup Designer"
-									bat 'rmdir "C:\\SoftwareAGCloud" /s /q'
-								}
-								catch(Exception e){
-									echo 'cleanup C:\\SoftwareAGCloud dir failed'
-								}*/
-							
-						}
-					}
-				}
-				}
-				stage('cleanup Designer Tools'){
+				stage('cleanup Designer Machine'){
 					agent {
 						label 'Designer'
 					}
@@ -139,50 +45,16 @@ pipeline {
 							bat 'rmdir "C:\\CloudCheckOut" /s /q'
 							echo "cleanup C:\\CloudCheckOut@tmp dir"
 							bat 'rmdir "C:\\CloudCheckOut@tmp" /s /q'
-							/*try{
-									echo "cleanup C:\\CloudCheckOut dir"
-									bat 'rmdir "C:\\CloudCheckOut" /s /q'
-									echo "cleanup C:\\CloudCheckOut@tmp dir"
-									bat 'rmdir "C:\\CloudCheckOut@tmp" /s /q'
-								}
-								catch(Exception e){
-									echo 'cleanup C:\\CloudCheckOut Or C:\\CloudCheckOut@tmp dir failed'
-								}*/
-							
-							//sh 'ls -l'
+
+						}
+						dir('C:/Cloud') {
+								echo "cleanup Designer"
+								bat 'rmdir "C:\\SoftwareAGCloud" /s /q'							
 						}
 						
 					}
 					
 				}
-				/*stage('Cleanup MySQL') {
-					agent {
-						label 'master'
-					}
-					environment {
-						softwareagInstallation="/home/saguser/SoftwareAG103"
-					}
-					steps {
-						script {
-							echo "Shutdown CCE"
-							sh "${env.softwareagInstallation}/profiles/CCE/bin/shutdown.sh"
-							sh "rm -rf ${env.softwareagInstallation}/profiles/CCE/logs/"
-						}
-					}
-				}
-
-				stage('Cleanup OnPremise Designer') {
-					agent {
-						label 'OnPremDesigner'
-					}
-					steps {
-						script {
-							echo "cleanup OnPremDesigner"
-							sh 'echo "$pwd"'
-						}
-					}
-				}
-
 				stage ('Cleanup CTP on cloud setup'){
 					agent {
 						label 'CTP'
@@ -190,21 +62,80 @@ pipeline {
 					steps {
 						script {
 							echo "Cleanup CTP"
-						//	sh "$pwd"
+							try{
+								echo "Start: shutdown CTP"
+								sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
+								echo "Completed: shutdown CTP"
+								echo "Start: SPM shutdown"
+								sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
+								echo "Completed: shutdown SPM"
+							}
+							catch(Exception e){
+								echo "CTP cleanup failed"
+							}
+							
+							dir('/opt/softwareag/') {
+								//sh 'ls -l'
+								echo "cleanup /opt/softwareag dir"
+								sh 'rm -rf *'
+							}
+							dir('/opt/SAGUpdateManage/'){
+								//sh 'ls -l'
+								echo "cleanup /opt/SAGUpdateManage/ dir"
+								sh 'rm -rf *'
+							}
+							dir('/opt/install/'){
+								//sh 'ls -l'
+								echo "cleanup checkout /opt/install/ dir"
+								sh 'rm -rf *'
+							}
 						}
 						
 					}
 				}
-				
-				stage ('Cleanup IS + UM on cloud setup'){
-					agent{label 'ISUM'}
+				stage ('Cleanup IS+UM on cloud setup'){
+					agent {
+						label 'ISUM'
+					}
 					steps {
 						script {
-							echo "Cleanup IS + UM"
-							//sh "$pwd"
-						}
+							echo "Cleanup IS+UM"
+							try{
+								echo "Start: IS"
+								sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
+								echo "Completed: shutdown IS"
+								/*echo "Start: UM"
+								sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
+								echo "Completed: shutdown SPM"*/
+								echo "Start: CTP"
+								sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
+								echo "Completed: shutdown CTP"
+								echo "Start: SPM"
+								sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
+								echo "Completed: shutdown SPM"
+							}
+							catch(Exception e){
+								echo "IS or UM cleanup failed"
+							}
+							
+							dir('/opt/softwareag/') {
+								//sh 'ls -l'
+								echo "cleanup /opt/softwareag dir"
+								sh 'rm -rf *'
+							}
+							dir('/opt/SAGUpdateManage/'){
+								//sh 'ls -l'
+								echo "cleanup /opt/SAGUpdateManage/ dir"
+								sh 'rm -rf *'
+							}
+							dir('/opt/install/'){
+								//sh 'ls -l'
+								echo "cleanup checkout /opt/install/ dir"
+								sh 'rm -rf *'
+							}
+						}						
 					}
-				}*/
+				}
 	  		}
 		}
 		stage('Checkout jobs'){
