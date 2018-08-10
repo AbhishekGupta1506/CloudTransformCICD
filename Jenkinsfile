@@ -250,7 +250,9 @@ pipeline {
 					steps{
 						script{
 							dir('C:/CloudCheckOut/CloudTransformCICD/installer'){
+								echo "Start: Designer installation"
 								bat 'ant install.designer'
+								echo "Completed: Designer installation"
 							}
 						}
 					}
