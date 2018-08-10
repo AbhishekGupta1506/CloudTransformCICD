@@ -44,15 +44,32 @@ pipeline {
 					steps{
 						dir('C:/Cloud/'){
 							//sh 'ls -l'
+
+							if (fileExists('C:\\CloudCheckOut')) {
 							echo "cleanup C:\\CloudCheckOut dir"
 							bat 'rmdir "C:\\CloudCheckOut" /s /q'
+							} else {
+							echo "Not Found C:\\CloudCheckOut dir"
+							}
+
+							if (fileExists('C:\\CloudCheckOut@tmp')) {
 							echo "cleanup C:\\CloudCheckOut@tmp dir"
 							bat 'rmdir "C:\\CloudCheckOut@tmp" /s /q'
+							} else {
+							echo "Not Found C:\\CloudCheckOut@tmp dir"
+							}
+							
+							
 
 						}
 						dir('C:/Cloud') {
+									
+								if (fileExists('C:\\SoftwareAGCloud')) {
 								echo "cleanup Designer"
-								bat 'rmdir "C:\\SoftwareAGCloud" /s /q'							
+								bat 'rmdir "C:\\SoftwareAGCloud" /s /q'
+								} else {
+								echo "Not Found C:\\SoftwareAGCloud dir"
+								}						
 						}
 						
 					}
@@ -67,17 +84,25 @@ pipeline {
 							echo "Cleanup CTP"
 							try{
 								echo "Start: shutdown CTP"
-								sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
+								//sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
+								//sh 'PID=$!' //catch the last PID, here from command1
+								//sh 'wait $PID' //wait for command1, in background, to end
 								echo "Completed: shutdown CTP"
 								echo "Start: SPM shutdown"
-								sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
+								//sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
+								//sh 'PID=$!' //catch the last PID, here from command1
+								//sh 'wait $PID' //wait for command1, in background, to end
 								echo "Completed: shutdown SPM"
 								//remove this once running on WmCI machines
 								echo "Start: IS"
-								sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
+								//sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
+								//sh 'PID=$!' //catch the last PID, here from command1
+								//sh 'wait $PID' //wait for command1, in background, to end
 								echo "Completed: shutdown IS"
 								echo "Start: UM"
-								sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
+								//sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
+								//sh 'PID=$!' //catch the last PID, here from command1
+								//sh 'wait $PID' //wait for command1, in background, to end
 								echo "Completed: shutdown UM"
 							}
 							catch(Exception e){
