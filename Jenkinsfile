@@ -244,9 +244,9 @@ pipeline {
 					steps{
 						script{
 							dir('C:/CloudCheckOut'){
-								echo "Started: checking out the GIT project"
+								echo "Started: checking out the GIT project in designer setup"
 								bat 'git clone --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
-								echo "Completed: checking out the GIT project"
+								echo "Completed: checking out the GIT project in designer setup"
 							}
 						}
 					}
