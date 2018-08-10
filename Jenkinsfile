@@ -296,7 +296,7 @@ pipeline {
 					}
 				}*/
 				
-				stage ('Install IS + UM + CTP on cloud setup'){
+				/*stage ('Install IS + UM + CTP on cloud setup'){
 					agent{label 'Tools'}
 					steps {
 						dir('/opt/install'){
@@ -318,7 +318,7 @@ pipeline {
 							echo "Completed: UM installation"
 						}
 					}
-				}
+				}*/
 				stage('Installating the Designer') {
 
 					agent {
