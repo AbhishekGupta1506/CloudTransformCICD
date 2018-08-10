@@ -90,8 +90,8 @@ pipeline {
 								if (fileExists('/opt/softwareag/profiles/CTP')) {
 									echo "Start: shutdown CTP"
 									sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
-									sh 'PID=\$\!' //catch the last PID, here from command1
-									echo 'PID is ${env.PID} ${PID}'
+									sh 'PID=$!' //catch the last PID, here from command1
+									echo 'PID is ${env.PID} ${PID} $PID $env.PID'
 									sh 'wait ${env.PID}' //wait for command1, in background, to end
 									echo "Completed: shutdown CTP"
 								}
