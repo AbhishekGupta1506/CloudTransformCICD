@@ -1,7 +1,7 @@
 <project name="CloudTransformation_Automation" basedir=".">
 	
 	<property name="jars.home" value="C:/CloudCheckOut/CloudTransformCICD/Jars"/>
-	<property name="installer.home" value="C:/CloudCheckOut/CloudTransformCICD/installer">
+	<property name="installer.home" value="C:/CloudCheckOut/CloudTransformCICD/installer"/>
 	
 	<target name="get.latest.installer">
 		<echo message="Downloading the installer" />
