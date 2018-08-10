@@ -24,18 +24,20 @@ pipeline {
 
 				stage('cleanup Tools'){
 					steps{
-						dir('/opt/install/'){
+						
 							//sh 'ls -l'
 							try{
-								echo "cleanup /opt/install/ dir"
-								sh 'rm -rf *'
+								dir('/opt/install/'){
+									echo "cleanup /opt/install/ dir"
+									sh 'rm -rf *'
+								}
 							}
 							catch(Exception e){
 								echo "cleanup /opt/install/ dir failed"
 							}
 							
 							//sh 'ls -l'
-						}
+						
 						
 					}
 					
