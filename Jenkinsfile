@@ -210,7 +210,7 @@ pipeline {
 		stage('Checkout jobs'){
 			parallel{
 
-				stage('Checkout CloudDeployment Automation project') {
+				/*stage('Checkout CloudDeployment Automation project') {
 					//environment {
 					//	workspace="/home/saguser/CloudTransform/"
 					//}
@@ -236,7 +236,7 @@ pipeline {
 							}
 						}
 					}
-				}
+				}*/
 				stage('checkout designer'){
 					agent{
 						label 'Designer'
