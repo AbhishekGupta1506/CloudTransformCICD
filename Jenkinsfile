@@ -94,6 +94,7 @@ pipeline {
 						}
 					}
 				}
+				}
 				stage('cleanup Designer Tools'){
 					steps{
 						dir('C:/Cloud/'){
