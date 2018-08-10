@@ -25,7 +25,9 @@ pipeline {
 				stage('cleanup Tools'){
 					steps{
 						dir('/opt/install/'){
+							sh 'ls -l'
 							sh 'rm -rf *'
+							sh 'ls -l'
 						}
 						
 					}
@@ -54,7 +56,7 @@ pipeline {
 							
 						catch(Exception e){
 
-							echo "shutdowe failed"
+							echo "shutdown failed"
 						}
 
 							//disable because IS installation is failing so UM is installed yet
@@ -63,11 +65,15 @@ pipeline {
 							echo "Completed: shutdown SPM"*/
 
 							dir('/opt/softwareag') {
+								sh 'ls -l'
 								sh 'rm -rf *'
+								sh 'ls -l'
 							}
 
 							dir('/opt/SAGUpdateManage/'){
+								sh 'ls -l'
 								sh 'rm -rf *'
+								sh 'ls -l'
 							}
 						}
 					}
