@@ -69,7 +69,7 @@ pipeline {
 								echo "cleanup Designer"
 								bat 'rmdir "C:\\SoftwareAGCloud" /s /q'
 								} else {
-								echo "Not Found C:\\SoftwareAGCloud dir"
+								echo "Designer is not installed under dir C:\\SoftwareAGCloud"
 								}						
 						//}
 						}
@@ -94,7 +94,7 @@ pipeline {
 									echo "Completed: shutdown CTP"
 								}
 								else{
-
+										echo "CTP is not installed under dir /opt/softwareag"
 								}
 								if (fileExists('/opt/softwareag/profiles/SPM')) {
 									echo "Start: SPM shutdown"
@@ -104,6 +104,7 @@ pipeline {
 									echo "Completed: shutdown SPM"
 								}
 								else{
+									echo "SPM is not installed under dir /opt/softwareag"
 
 								}
 									//remove this once running on WmCI machines
@@ -115,6 +116,7 @@ pipeline {
 										echo "Completed: shutdown IS"
 									}
 									else{
+										echo "IS is not installed under dir /opt/softwareag"
 
 									}
 									if (fileExists('/opt/softwareag/UniversalMessaging/server/umserver/bin/')) {
@@ -125,6 +127,7 @@ pipeline {
 										echo "Completed: shutdown UM"
 									}
 									else{
+										echo "UM is not installed under dir /opt/softwareag"
 
 									}
 								
