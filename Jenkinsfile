@@ -169,6 +169,7 @@ pipeline {
 								echo "SVN checkout done"
 								sh 'chmod 777 *'
 								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/gradle.properties /opt/install'
+								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/default_gradle.properties /opt/install'
 								echo "Run gradlew -b download.gradle download"
 								sh './gradlew -b download.gradle download'
 								echo "Completed gradlew -b download.gradle download"
