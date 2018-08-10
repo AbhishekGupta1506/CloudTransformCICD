@@ -85,27 +85,49 @@ pipeline {
 						script {
 							echo "Cleanup CTP"
 							try{
-								echo "Start: shutdown CTP"
-								//sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
-								//sh 'PID=$!' //catch the last PID, here from command1
-								//sh 'wait $PID' //wait for command1, in background, to end
-								echo "Completed: shutdown CTP"
-								echo "Start: SPM shutdown"
-								//sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
-								//sh 'PID=$!' //catch the last PID, here from command1
-								//sh 'wait $PID' //wait for command1, in background, to end
-								echo "Completed: shutdown SPM"
-								//remove this once running on WmCI machines
-								echo "Start: IS"
-								//sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
-								//sh 'PID=$!' //catch the last PID, here from command1
-								//sh 'wait $PID' //wait for command1, in background, to end
-								echo "Completed: shutdown IS"
-								echo "Start: UM"
-								//sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
-								//sh 'PID=$!' //catch the last PID, here from command1
-								//sh 'wait $PID' //wait for command1, in background, to end
-								echo "Completed: shutdown UM"
+
+								if (fileExists('/opt/softwareag/profiles/CTP')) {
+									echo "Start: shutdown CTP"
+									sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
+									sh 'PID=$!' //catch the last PID, here from command1
+									sh 'wait $PID' //wait for command1, in background, to end
+									echo "Completed: shutdown CTP"
+								}
+								else{
+
+								}
+								if (fileExists('/opt/softwareag/profiles/SPM')) {
+									echo "Start: SPM shutdown"
+									sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
+									sh 'PID=$!' //catch the last PID, here from command1
+									sh 'wait $PID' //wait for command1, in background, to end
+									echo "Completed: shutdown SPM"
+								}
+								else{
+
+								}
+									//remove this once running on WmCI machines
+									if (fileExists('/opt/softwareag/profiles/IS_default')) {
+										echo "Start: IS"
+										sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
+										sh 'PID=$!' //catch the last PID, here from command1
+										sh 'wait $PID' //wait for command1, in background, to end
+										echo "Completed: shutdown IS"
+									}
+									else{
+
+									}
+									if (fileExists('/opt/softwareag/UniversalMessaging/server/umserver/bin/')) {
+										echo "Start: UM"
+										sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
+										sh 'PID=$!' //catch the last PID, here from command1
+										sh 'wait $PID' //wait for command1, in background, to end
+										echo "Completed: shutdown UM"
+									}
+									else{
+
+									}
+								
 							}
 							catch(Exception e){
 								echo "CTP cleanup failed"
