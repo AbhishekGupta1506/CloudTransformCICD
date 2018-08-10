@@ -96,6 +96,9 @@ pipeline {
 				}
 				}
 				stage('cleanup Designer Tools'){
+					agent {
+						label 'Designer'
+					}
 					steps{
 						dir('C:/Cloud/'){
 							//sh 'ls -l'
@@ -276,7 +279,7 @@ pipeline {
 				stage('Installating the Designer') {
 
 					agent {
-						label Designer
+						label 'Designer'
 					}
 					steps{
 						script{
