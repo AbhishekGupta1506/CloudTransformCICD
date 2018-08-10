@@ -93,6 +93,8 @@ pipeline {
 									sh 'PID="$!"' //catch the last PID, here from command1
 									echo 'PID is ${env.PID} ${PID} $PID $env.PID'
 									sh 'PID is ${env.PID} ${PID} $PID $env.PID'
+									echo '$!'
+									sh '$!'
 									sh 'wait ${PID}' //wait for command1, in background, to end
 									echo "Completed: shutdown CTP"
 								}
