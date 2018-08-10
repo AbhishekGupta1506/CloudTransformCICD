@@ -171,8 +171,10 @@ pipeline {
 								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
 								echo "SVN checkout done"
 								sh 'chmod 777 *'
+								//remove once automation is fixed from WCIC team
 								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/gradle.properties /opt/install'
 								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/default_gradle.properties /opt/install'
+								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/um.txt /opt/install/templates/um.txt'
 								echo "Run gradlew -b download.gradle download"
 								sh './gradlew -b download.gradle download'
 								echo "Completed gradlew -b download.gradle download"
