@@ -205,18 +205,20 @@ pipeline {
 							sh './gradlew installCTP -x validate'
 							echo "Completed: CTP installation"
 
+							echo "Started: UM installation"
+							sh './gradlew installUM -x validate'
+							echo "Completed: UM installation"
 							//removing .svn folder because of IS failure 
 							dir('/opt/install/os_independent/packages'){
 
 								sh 'rm -rf *'
+								sh 'ls -l'
 							}
 							echo "Started: IS installation"
 							sh './gradlew installIS -x validate'
 							echo "Completed: IS installation"
 
-							echo "Started: UM installation"
-							sh './gradlew installUM -x validate'
-							echo "Completed: UM installation"
+							
 						}
 					}
 				}
