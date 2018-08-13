@@ -1,9 +1,13 @@
 pipeline {
-    agent none
+    agent master
     options {
         buildDiscarder(logRotator(numToKeepStr:'10'))
         disableConcurrentBuilds()
         skipDefaultCheckout()
+    }
+
+	tools {
+        jdk 'jdk-1.8'
     }
 
     stages {
