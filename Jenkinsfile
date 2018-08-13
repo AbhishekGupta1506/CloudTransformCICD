@@ -17,8 +17,8 @@ pipeline {
 						label 'master'
 					}
 					steps{
-							echo '$JAVA_HOME'
-							echo 'java -version'
+							sh 'echo $JAVA_HOME'
+							sh 'java -version'
 							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMCTP'], serverName: 'vsphere_cloud'
      						vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMSQL'], serverName: 'vsphere_cloud'
 							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISUM'], serverName: 'vsphere_cloud'
