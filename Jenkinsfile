@@ -15,7 +15,6 @@ pipeline {
     }
 	environment {
 						workspace="/home/saguser/CloudTransform/"
-						PID=null
 				}
     stages {
 
@@ -28,12 +27,21 @@ pipeline {
 						label 'MySql'
 					}
 					steps{
+						
+					
 						dir('/opt/install/'){
 							//sh 'ls -l'
 							echo "cleanup checkout /opt/install/ dir"
-							sh 'rm -rf *'
+							
+							//sh './gradlew -b download.gradle download'
+							//sh './gradlew dropDatabases -x validate'
+							//sh 'rm -rf *'
+
+							// code for rever VMs 
 						}
-						
+						if (fileExists('/root/.gradle')) {
+								sh 'rm -rf /root/.gradle' //cleanup /root/.gradle
+						}
 					}
 					
 				}
@@ -87,66 +95,15 @@ pipeline {
 							echo "Cleanup CTP"
 							try{
 
-								if (fileExists('/opt/softwareag/profiles/CTP')) {
-									echo "Start: shutdown CTP"
-									sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
-									sleep 120
-									echo "Completed: shutdown CTP"
-								}
-								else{
-										echo "CTP is not installed under dir /opt/softwareag"
-								}
-								if (fileExists('/opt/softwareag/profiles/SPM')) {
-									echo "Start: SPM shutdown"
-									sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
-									sleep 120
-									echo "Completed: shutdown SPM"
-								}
-								else{
-									echo "SPM is not installed under dir /opt/softwareag"
+								// code for rever VMs 
 
+								if (fileExists('/root/.gradle')) {
+									sh 'rm -rf /root/.gradle' //cleanup /root/.gradle
 								}
-									//remove this once running on WmCI machines
-									if (fileExists('/opt/softwareag/profiles/IS_default')) {
-										echo "Start: IS"
-										sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
-										sleep 120
-										echo "Completed: shutdown IS"
-									}
-									else{
-										echo "IS is not installed under dir /opt/softwareag"
-
-									}
-									if (fileExists('/opt/softwareag/UniversalMessaging/server/umserver/bin/')) {
-										echo "Start: UM"
-										sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
-										sleep 120
-										echo "Completed: shutdown UM"
-									}
-									else{
-										echo "UM is not installed under dir /opt/softwareag"
-
-									}
 								
 							}
 							catch(Exception e){
 								echo "CTP cleanup failed"
-							}
-							
-							dir('/opt/softwareag/') {
-								//sh 'ls -l'
-								echo "cleanup /opt/softwareag dir"
-								sh 'rm -rf *'
-							}
-							dir('/opt/SAGUpdateManage/'){
-								//sh 'ls -l'
-								echo "cleanup /opt/SAGUpdateManage/ dir"
-								sh 'rm -rf *'
-							}
-							dir('/opt/install/'){
-								//sh 'ls -l'
-								echo "cleanup checkout /opt/install/ dir"
-								sh 'rm -rf *'
 							}
 						}
 						
@@ -159,38 +116,18 @@ pipeline {
 					steps {
 						script {
 							echo "Cleanup IS+UM"
+
+							
 							try{
-								echo "Start: IS shutdown"
-								//sh '/opt/softwareag/profiles/IS_default/bin/shutdown.sh'
-								echo "Completed: shutdown IS"
-								echo "Start: UM"
-								//sh '/opt/softwareag/UniversalMessaging/server/umserver/bin/nstopserver'
-								echo "Completed: shutdown UM"
-								echo "Start: CTP"
-								//sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
-								echo "Completed: shutdown CTP"
-								echo "Start: SPM"
-								//sh '/opt/softwareag/profiles/SPM/bin/shutdown.sh'
-								echo "Completed: shutdown SPM"
+
+								// code for rever VMs 
+
+								if (fileExists('/root/.gradle')) {
+									sh 'rm -rf /root/.gradle' //cleanup /root/.gradle
+								}
 							}
 							catch(Exception e){
 								echo "IS or UM cleanup failed"
-							}
-							
-							dir('/opt/softwareag/') {
-								//sh 'ls -l'
-								echo "cleanup /opt/softwareag dir"
-								//sh 'rm -rf *'
-							}
-							dir('/opt/SAGUpdateManage/'){
-								//sh 'ls -l'
-								echo "cleanup /opt/SAGUpdateManage/ dir"
-								//sh 'rm -rf *'
-							}
-							dir('/opt/install/'){
-								//sh 'ls -l'
-								echo "cleanup checkout /opt/install/ dir"
-								//sh 'rm -rf *'
 							}
 						}						
 					}
@@ -201,9 +138,6 @@ pipeline {
 			parallel{
 
 				stage('Checkout CloudDeployment Automation project') {
-					//environment {
-					//	workspace="/home/saguser/CloudTransform/"
-					//}
 					agent {
 						//label 'MySql && CTP && ISUM'
 						label 'CTP'
@@ -221,16 +155,61 @@ pipeline {
 								echo "SVN checkout done"
 								sh 'chmod 777 *'
 								//remove once automation is fixed from WCIC team
-								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/gradle.properties /opt/install'
-								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/default_gradle.properties /opt/install'
-								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/um.txt /opt/install/templates/um.txt'
-								echo "Run gradlew -b download.gradle download"
-								sh './gradlew -b download.gradle download'
-								echo "Completed gradlew -b download.gradle download"
+								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/CTP/gradle.properties /opt/install'
 							}
 						}
 					}
 				}
+
+				stage('Checkout CloudDeployment Automation project') {
+					agent {
+						//label 'MySql && CTP && ISUM'
+						label 'MySQL'
+					}
+					steps {
+						script {
+							dir('/opt/install'){
+
+								echo "Started: checking out the GIT /opt/install/project"
+								sh 'git clone -b dev --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+								echo "Done: checking out the GIT project"
+								echo "SVN checkout started"
+								//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
+								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
+								echo "SVN checkout done"
+								sh 'chmod 777 *'
+								//remove once automation is fixed from WCIC team
+								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/SQL/gradle.properties /opt/install'
+							}
+						}
+					}
+				}
+
+				tage('Checkout CloudDeployment Automation project') {
+					agent {
+						//label 'MySql && CTP && ISUM'
+						label 'ISUM'
+					}
+					steps {
+						script {
+							dir('/opt/install'){
+
+								echo "Started: checking out the GIT /opt/install/project"
+								sh 'git clone -b dev --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+								echo "Done: checking out the GIT project"
+								echo "SVN checkout started"
+								//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
+								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
+								echo "SVN checkout done"
+								sh 'chmod 777 *'
+								//remove once automation is fixed from WCIC team
+								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/ISUM/gradle.properties /opt/install'
+								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/ISUM/um.txt /opt/install/templates/um.txt'
+							}
+						}
+					}
+				}
+
 				stage('checkout designer'){
 					agent{
 						label 'Designer'
@@ -254,59 +233,84 @@ pipeline {
 				stage ('Install CTP on cloud setup'){
 					agent{label 'CTP'}
 					steps {
+
+						sh 'postfix start'
+						sh 'memcached -d -u root -m 256'
+
 						dir('/opt/install'){
+							
+							echo "download assets job start"
+							sh './gradlew -b download.gradle download'
+							echo "download job done"
+
 							echo "Started: CTP installation"
 							sh './gradlew installCTP -x validate'
 							echo "Completed: CTP installation"
 
-							echo "Started: UM installation"
-							sh './gradlew installUM -x validate'
-							echo "Completed: UM installation"
-							//removing .svn folder because of IS failure 
-							dir('/opt/install/os_independent/packages/'){
+							echo "Started: IS war installation"
+							sh './gradlew installIntegrationWar -x validate'
+							echo "Completed: IS war installation"
 
-								sh 'rm -rf .svn'
-								sh 'ls -al'
-							}
-							echo "Started: IS installation"
-							sh './gradlew installIS -x validate'
-							echo "Completed: IS installation"
+							echo "Started: customizeCTP job started"
+							sh './gradlew customizeCTP -x validate'
+							echo "Completed: customizeCTP job"
 
 							
 						}
 					}
 				}
+
+				stage ('Run MySql script on cloud setup'){
+					agent{label 'MySql'}
+					steps {
+						sh '/etc/init.d/mysql stop'
+						sh 'mysqld --defaults-file=/usr/my-ipaas.ini -u root 2>1 &'
+
+						dir('/opt/install'){
+							echo "Started: MySql script"
+							//sh './gradlew -b download.gradle download' 
+							sh './gradlew executeDatabaseScripts -x validate'
+							sh './gradlew executeCustomSQLScripts -x validate'
+							sh './gradlew apply_10_7_patch -x validate'
+							sh './gradlew apply_10_8_patch -x validate'
+							sh './gradlew executeDatabasePatchScripts -x validate'
+							sh './gradlew customizeDB -x validate'
+							echo "Completed: MySql script"
+
+
+
+						}
+
+							echo "Stop Nginx started"
+							sh 'service nginx stop'
+							echo "Stop Nginx completed"
+
+							echo "Start Nginx started"
+							sh 'service nginx start'
+							echo "Completed Nginx start"
+					}
+				}
+
 				stage ('Install IS+UM on cloud setup'){
 					agent{label 'ISUM'}
 					steps {
+
+						echo "Stop Nginx started"
+						sh 'service nginx stop'
+						echo "Stop Nginx completed"
+
+						echo "Start Nginx started"
+						sh 'service nginx start'
+						echo "Completed Nginx start"
+
 						dir('/opt/install'){
-							//removing .svn folder because of IS failure 
-							/*dir('/opt/install/os_independent/packages'){
-
-								sh 'rm -rf *'
-							}
-							echo "Started: IS installation"
-							sh './gradlew installIS -x validate'
-							echo "Completed: IS installation"
-
-							echo "Started: UM installation"
-							sh './gradlew installUM -x validate'
-							echo "Completed: UM installation"*/
 							echo "Started: Install IS+UM on cloud setup"
+							sh './gradlew installIS -x validate'
+							sh './gradlew installUM -x validate'
 							echo "Completed: Install IS+UM on cloud setup"
 						}
 					}
 				}
-				stage ('Run MySql script on cloud setup'){
-					agent{label 'MySql'}
-					steps {
-						dir('/opt/install'){
-							echo "Started: MySql script"
-							echo "Completed: MySql script"
-						}
-					}
-				}
-
 				stage('Installing the Designer') {
 
 					agent {
