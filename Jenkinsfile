@@ -13,15 +13,15 @@ pipeline {
 						label 'master'
 					}
 					steps{
-							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMCTP'], serverName: 'daevcsa01.eur.ad.sag'
-     						vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMSQL'], serverName: 'daevcsa01.eur.ad.sag'
-							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISUM'], serverName: 'daevcsa01.eur.ad.sag'
-							//vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMDESIGNER'], serverName: 'daevcsa01.eur.ad.sag'
+							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMCTP'], serverName: 'vsphere_cloud'
+     						vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMSQL'], serverName: 'vsphere_cloud'
+							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISUM'], serverName: 'vsphere_cloud'
+							//vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMDESIGNER'], serverName: 'vsphere_cloud'
 							sleep 10
-							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMCTP'], serverName: 'daevcsa01.eur.ad.sag'
-							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSQL'], serverName: 'daevcsa01.eur.ad.sag'
-							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISUM'], serverName: 'daevcsa01.eur.ad.sag'
-							//vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMDESIGNER'], serverName: 'daevcsa01.eur.ad.sag'
+							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMCTP'], serverName: 'vsphere_cloud'
+							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSQL'], serverName: 'vsphere_cloud'
+							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISUM'], serverName: 'vsphere_cloud'
+							//vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMDESIGNER'], serverName: 'vsphere_cloud'
 							sleep 80
 					}
 		}
