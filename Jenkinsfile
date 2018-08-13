@@ -19,7 +19,7 @@ pipeline {
 					steps{
 							sh 'echo $JAVA_HOME'
 							sh 'java -version'
-							/*vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
+							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
      						vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMBLRPT05'], serverName: 'vsphere_cloud'
 							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'
 							//vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
@@ -28,7 +28,7 @@ pipeline {
 							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMBLRPT05'], serverName: 'vsphere_cloud'
 							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'
 							//vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
-							sleep 80*/
+							sleep 80
 					}
 		}
 		stage('Checkout jobs'){
@@ -129,7 +129,7 @@ pipeline {
 						sh 'mysqld --defaults-file=/usr/my-ipaas.ini -u root 2>1 &'
 
 						dir('/opt/install'){
-							//sh './gradlew -b download.gradle download' 
+							sh './gradlew -b download.gradle download' 
 							sh './gradlew executeDatabaseScripts -x validate'
 							sh './gradlew executeCustomSQLScripts -x validate'
 							sh './gradlew apply_10_7_patch -x validate'
@@ -150,6 +150,7 @@ pipeline {
 						sh 'service nginx start'
 
 						dir('/opt/install'){
+							sh './gradlew -b download.gradle download' 
 							sh './gradlew installIS -x validate'
 							sh './gradlew installUM -x validate'
 						}
