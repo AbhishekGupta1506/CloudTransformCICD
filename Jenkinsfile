@@ -19,120 +19,22 @@ pipeline {
     stages {
 
 
-		stage('Cleanup products') {
-			parallel {
-
-				stage('cleanup MySql'){
+		stage('Restart VMs') {
 					agent {
 						label 'MySql'
 					}
 					steps{
-						
-					
-						dir('/opt/install/'){
-							//sh 'ls -l'
-							echo "cleanup checkout /opt/install/ dir"
-							
-							//sh './gradlew -b download.gradle download'
-							//sh './gradlew dropDatabases -x validate'
-							//sh 'rm -rf *'
-
-							// code for rever VMs 
-						}
-						if (fileExists('/root/.gradle')) {
-								sh 'rm -rf /root/.gradle' //cleanup /root/.gradle
-						}
+							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMCTP'], serverName: 'daevcsa01.eur.ad.sag'
+     						vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMSQL'], serverName: 'daevcsa01.eur.ad.sag'
+							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISUM'], serverName: 'daevcsa01.eur.ad.sag'
+							//vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMDESIGNER'], serverName: 'daevcsa01.eur.ad.sag'
+							sleep 10
+							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMCTP'], serverName: 'daevcsa01.eur.ad.sag'
+							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSQL'], serverName: 'daevcsa01.eur.ad.sag'
+							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISUM'], serverName: 'daevcsa01.eur.ad.sag'
+							//vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMDESIGNER'], serverName: 'daevcsa01.eur.ad.sag'
+							sleep 80
 					}
-					
-				}
-
-				stage('cleanup Designer Machine'){
-					agent {
-						label 'Designer'
-					}
-					steps{
-						script{
-						//dir('C:/Cloud/'){
-							//sh 'ls -l'
-
-							if (fileExists('C:\\CloudCheckOut')) {
-							echo "cleanup C:\\CloudCheckOut dir"
-							bat 'rmdir "C:\\CloudCheckOut" /s /q'
-							} else {
-							echo "Not Found C:\\CloudCheckOut dir"
-							}
-
-							if (fileExists('C:\\CloudCheckOut@tmp')) {
-							echo "cleanup C:\\CloudCheckOut@tmp dir"
-							bat 'rmdir "C:\\CloudCheckOut@tmp" /s /q'
-							} else {
-							echo "Not Found C:\\CloudCheckOut@tmp dir"
-							}
-							
-							
-
-						//}
-						//dir('C:/Cloud') {
-									
-								if (fileExists('C:\\SoftwareAGCloud')) {
-								echo "cleanup Designer"
-								bat 'rmdir "C:\\SoftwareAGCloud" /s /q'
-								} else {
-								echo "Designer is not installed under dir C:\\SoftwareAGCloud"
-								}						
-						//}
-						}
-						
-					}
-					
-				}
-				stage ('Cleanup CTP on cloud setup'){
-					agent {
-						label 'CTP'
-					}
-					steps {
-						script {
-							echo "Cleanup CTP"
-							try{
-
-								// code for rever VMs 
-
-								if (fileExists('/root/.gradle')) {
-									sh 'rm -rf /root/.gradle' //cleanup /root/.gradle
-								}
-								
-							}
-							catch(Exception e){
-								echo "CTP cleanup failed"
-							}
-						}
-						
-					}
-				}
-				stage ('Cleanup IS+UM on cloud setup'){
-					agent {
-						label 'ISUM'
-					}
-					steps {
-						script {
-							echo "Cleanup IS+UM"
-
-							
-							try{
-
-								// code for rever VMs 
-
-								if (fileExists('/root/.gradle')) {
-									sh 'rm -rf /root/.gradle' //cleanup /root/.gradle
-								}
-							}
-							catch(Exception e){
-								echo "IS or UM cleanup failed"
-							}
-						}						
-					}
-				}
-	  		}
 		}
 		stage('Checkout jobs'){
 			parallel{
