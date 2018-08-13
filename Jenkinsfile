@@ -110,6 +110,7 @@ pipeline {
 				stage ('Install CTP on cloud setup'){
 					agent{label 'CTP'}
 					steps {
+						sh 'postfix stop'
 						sh 'postfix start'
 						sh 'memcached -d -u root -m 256'
 						dir('/opt/install'){
