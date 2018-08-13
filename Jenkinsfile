@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
     //triggers { pollSCM('H */60 * * 1-5') }
     options {
         buildDiscarder(logRotator(numToKeepStr:'10'))
@@ -7,21 +7,11 @@ pipeline {
         skipDefaultCheckout() // FIXME: resolve default git checkout problem!
     }
 
-	//tools is ignore if agent is none
-	tools {
-        jdk 'jdk-1.8'
-		gradle 'gradle-3.4.1'
-
-    }
-	environment {
-						workspace="/home/saguser/CloudTransform/"
-				}
     stages {
-
 
 		stage('Restart VMs') {
 					agent {
-						label 'MySql'
+						label 'master'
 					}
 					steps{
 							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMCTP'], serverName: 'daevcsa01.eur.ad.sag'
@@ -65,7 +55,6 @@ pipeline {
 
 				stage('Checkout CloudDeployment Automation project') {
 					agent {
-						//label 'MySql && CTP && ISUM'
 						label 'MySQL'
 					}
 					steps {
@@ -76,7 +65,6 @@ pipeline {
 								sh 'git clone -b dev --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								echo "Done: checking out the GIT project"
 								echo "SVN checkout started"
-								//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
 								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
 								echo "SVN checkout done"
 								sh 'chmod 777 *'
@@ -89,7 +77,6 @@ pipeline {
 
 				tage('Checkout CloudDeployment Automation project') {
 					agent {
-						//label 'MySql && CTP && ISUM'
 						label 'ISUM'
 					}
 					steps {
@@ -100,7 +87,6 @@ pipeline {
 								sh 'git clone -b dev --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								echo "Done: checking out the GIT project"
 								echo "SVN checkout started"
-								//svn checkout "http://svndae.hq.sag:1818/svn/sag/integration-live/installation/branches/CloudDeployment/"
 								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
 								echo "SVN checkout done"
 								sh 'chmod 777 *'
@@ -112,7 +98,7 @@ pipeline {
 					}
 				}
 
-				stage('checkout designer'){
+				/*stage('checkout designer'){
 					agent{
 						label 'Designer'
 					}
@@ -125,7 +111,7 @@ pipeline {
 							}
 						}
 					}
-				}
+				}*/
 			}
 		}
 		
@@ -163,7 +149,7 @@ pipeline {
 				}
 
 				stage ('Run MySql script on cloud setup'){
-					agent{label 'MySql'}
+					agent{label 'MySQL'}
 					steps {
 						sh '/etc/init.d/mysql stop'
 						sh 'mysqld --defaults-file=/usr/my-ipaas.ini -u root 2>1 &'
@@ -213,7 +199,7 @@ pipeline {
 						}
 					}
 				}
-				stage('Installing the Designer') {
+				/*stage('Installing the Designer') {
 
 					agent {
 						label 'Designer'
@@ -227,7 +213,7 @@ pipeline {
 							}
 						}
 					}
-				}
+				}*/
 
 			}
 	  }
