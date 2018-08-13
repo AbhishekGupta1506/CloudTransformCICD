@@ -29,13 +29,13 @@ pipeline {
 							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMBLRPT05'], serverName: 'vsphere_cloud'
 							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'
 							//vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
-							sleep 80
+							sleep 180
 					}
 		}
 		stage('Checkout jobs'){
 			parallel{
 
-				stage('Checkout CloudDeployment Automation project') {
+				stage('Checkout CloudDeployment Automation project in CTP') {
 					agent {
 						label 'CTP'
 					}
@@ -52,7 +52,7 @@ pipeline {
 					}
 				}
 
-				stage('Checkout CloudDeployment Automation project') {
+				stage('Checkout CloudDeployment Automation project in MySQL') {
 					agent {
 						label 'MySQL'
 					}
@@ -69,7 +69,7 @@ pipeline {
 					}
 				}
 
-				stage('Checkout CloudDeployment Automation project') {
+				stage('Checkout CloudDeployment Automation project in ISUM') {
 					agent {
 						label 'ISUM'
 					}
