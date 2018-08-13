@@ -62,7 +62,7 @@ pipeline {
 					}
 				}
 
-				tage('Checkout CloudDeployment Automation project') {
+				stage('Checkout CloudDeployment Automation project') {
 					agent {
 						label 'ISUM'
 					}
