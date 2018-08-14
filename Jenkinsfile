@@ -161,7 +161,7 @@ pipeline {
 							withEnv(['PATH+JAVA_HOME=/home/local/EUR/siqavm/jdk1.8.0_131/bin']) {
 							sh './gradlew -b download.gradle download' 
 							sh './gradlew installIS -x validate'
-							sh './gradlew installUM -x validate'
+							//sh './gradlew installUM -x validate'
 							}
 						}
 					}
@@ -195,8 +195,8 @@ pipeline {
 	}
 	post {	
 				always {
-						//mail to: 'abg@softwareag.com, mjan@softwareag.com, mosy@softwareag.com, meea@softwareag.com, inra@softwareag.com',
-						mail to: 'abg@softwareag.com',
+						mail to: 'abg@softwareag.com, mjan@softwareag.com, mosy@softwareag.com, meea@softwareag.com, inra@softwareag.com',
+						//mail to: 'abg@softwareag.com',
 						subject: "CloudTransformation Pipeline completed -- JobName: ${env.JOB_NAME} BuildNumber: ${env.BUILD_NUMBER}",
 						body: "checkout the report: ${env.BUILD_URL}"
 			}
