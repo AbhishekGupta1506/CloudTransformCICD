@@ -130,8 +130,8 @@ pipeline {
 				stage ('Run MySql script on cloud setup'){
 					agent{label 'MySQL'}
 					steps {
-						sh '/etc/init.d/mysql stop'
-						sh 'mysqld --defaults-file=/usr/my-ipaas.ini -u root 2>1 &'
+						//sh '/etc/init.d/mysql stop'
+						//sh 'mysqld --defaults-file=/usr/my-ipaas.ini -u root 2>1 &'
 
 						dir('/opt/install'){
 							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
