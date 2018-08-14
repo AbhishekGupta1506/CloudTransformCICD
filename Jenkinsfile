@@ -114,12 +114,15 @@ pipeline {
 						sh 'postfix start'
 						sh 'memcached -d -u root -m 256'
 						dir('/opt/install'){
+							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
+          					echo "PATH is: $PATH"
 							sh './gradlew -b download.gradle download'
 							sh './gradlew installCTP -x validate'
 
 							sh './gradlew installIntegrationWar -x validate'
 
-							sh './gradlew customizeCTP -x validate'							
+							sh './gradlew customizeCTP -x validate'	
+							}						
 						}
 					}
 				}
@@ -131,6 +134,8 @@ pipeline {
 						sh 'mysqld --defaults-file=/usr/my-ipaas.ini -u root 2>1 &'
 
 						dir('/opt/install'){
+							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
+							echo "PATH is: $PATH"
 							sh './gradlew -b download.gradle download' 
 							sh './gradlew executeDatabaseScripts -x validate'
 							sh './gradlew executeCustomSQLScripts -x validate'
@@ -138,6 +143,7 @@ pipeline {
 							sh './gradlew apply_10_8_patch -x validate'
 							sh './gradlew executeDatabasePatchScripts -x validate'
 							sh './gradlew customizeDB -x validate'
+							}
 						}
 							sh 'service nginx stop'
 							sh 'service nginx start'
@@ -152,9 +158,11 @@ pipeline {
 						sh 'service nginx start'
 
 						dir('/opt/install'){
+							withEnv(['PATH+JAVA_HOME=/home/local/EUR/siqavm/jdk1.8.0_131/bin']) {
 							sh './gradlew -b download.gradle download' 
 							sh './gradlew installIS -x validate'
 							sh './gradlew installUM -x validate'
+							}
 						}
 					}
 				}
