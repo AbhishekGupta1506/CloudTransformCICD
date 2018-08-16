@@ -1,0 +1,333 @@
+alias: sag-ic-migration
+description: Base assect migtaion for Integration Cloud environment with UM,TC,IS
+version: 1.2
+changes:
+  - 1.0 v9.8  Initial version
+  
+environments:
+  default:                                  # defaults
+    # product and fix repositories
+    version:      "10.3"                    # MUST be 9.8+
+    repo.product: webMethods-${version}     # source product repository name, must be pre-registered
+    repo.spm:     ${repo.product}           # source product repo for SPM, can be bootstrap image
+    repo.fix:     Empower                   # source fix repository name, must be pre-registered
+    repo.fix.spm: ${repo.fix}               # source fix repo for SPM, can be bootstrap image
+
+    # Remote system configuration 
+
+    os.platform:  W64                  # remote machine OS platform code
+    os.username:  ${user.name}              # remote machine SSH username, default CCE process user account (as java system property)
+    os.password:  ${os.username}            # remote machine SSH password
+    os.auth.method: PASSWORD                # remote machine authentication method: PASSWORD,INTERACTIVE,CERTIFICATE
+    os.auth.key:  ${user.home}/.ssh/id_rsa  # keyfile for CERTIFICATE auth method
+    os.port:      22                        # remote machine SSH port
+    install.dir:  ${}           # suite installation directory
+
+    spm.port:       8092                    # SPM connection port
+    spm.secure:     false                   # Use HTTPS connection to SPM: true,false
+    spm.memory.max: 512                     # max mem
+    spm.configure:  [spm-tuneup,osgi-tuneup]    
+    osgi.fixes:     []      # TODO: remove this after wMFix.SPM depends on wMFix.OSGI.Agent
+    spm.fixes:      []             # SPM/SUM/SD core fixes by default
+    spm.distribution: ALL                   # EXPERIMENTAL! distribution, ALL, DEF, MIN
+    spm.useImage:     true                  # EXPERIMENTAL! false for direct connection to the MASTER repo!
+    
+    spm.host:           ${}                 # REQUIRED for all in one installation as default host
+    
+    # Database. See dbc template for parameters documentation
+    
+    dbc.alias:           local              # database configurator node
+    dbc.host:            localhost          # database configurator host
+    dbc.fixes:           ALL                # fixes for database configurator
+    dbc.configure:       [dbc]              
+    
+    # Database connection. 
+    
+    db.type:             ${}                # REQUIRED: Database type: oracle,sqlserver,db2
+    db.host:             ${}                # REQUIRED: Database server hostname
+    db.port:             ${}                # REQUIRED: Database server port
+    db.name:             WEBM               # Database name
+    db.username:         ${db.name}         # Database username
+    db.password:         ${db.name}         # Database password
+    db.url:              "jdbc:wm:${db.type}://${db.host}:${db.port};databaseName=${db.name}"
+
+    # Database server admin connection for storage/user creation
+
+ #   db.tablespace.dir:   ${}                # REQUIRED: for Oracle/DB2
+    db.tablespace.data:  WEBMDATA           # for Oracle/DB2
+    db.tablespace.index: WEBMINDX           # for Oracle/DB2
+    
+    # Schemas
+    
+    db.components:       [ALL]              # Storage and all components by default
+    db.products:         [IS]                 
+    db.component.version: latest 
+    db.product.version:   latest
+
+    env.password:        manage             # IS/MWS Administrator password
+    
+    # Universal Messaging Server. See um-layer template for parameters documentation
+
+    um.host:             ${spm.host}
+    um.instance.port:    9000               
+    um.memory.init:      256                
+    um.memory.max:       1024               
+    um.memory.direct:    1G                 
+    um.cluster:          cluster
+    um.configure:        [um-server]
+    um.fixes:            ALL
+    um.license.key.alias: ${}               # REQUIRED UM license
+    um.cluster.url:      nsp://${um.host}:${um.instance.port}
+    um.jndi.cf:          um_local
+    
+    # Terracotta Server. See tc-layer template for parameters documentation
+
+    tc.host:             ${spm.host}
+    tc.tsa.port:         9010
+    tc.jmx.port:         9020
+    tc.grp.port:         9030
+    tc.mgt.port:         9040
+    tc.memory.init:      2024
+    tc.memory.max:       2024
+    tc.storage.size:     50g
+    tc.offheap.size:     2g
+    tc.configure:        [tc-server]
+    tc.fixes:            ALL
+    tc.license.key.alias: ${}               # REQUIRED
+
+    # Integration Server. See is-layer template for parameters documentation
+    
+    is.host:            ${spm.host}        
+    is.lb.host:         ${is.host}
+    is.lb.protocol:     HTTP
+    is.instance.name:    default            # IS is instance
+    is.primary.port:     5555
+    is.diagnostic.port:  9999
+    is.jmx.port:         8094
+    is.install.service:  true
+    is.memory.init:      256                # memory configuration
+    is.memory.max:       1024               # memory configuration
+    is.lb.protocol:      HTTP               # external load balancer protocol
+    is.lb.host:          ${is.host}        # external load balancer host
+    is.lb.port:          ${is.primary.port} # external load balancer port
+    is.fixes:            ALL
+    is.configure:        [is-server]
+    is.cluster.enabled:  true
+    is.tsa.url:          ${tc.host}:${tc.tsa.port}
+    is.license.key.alias:    ${}
+
+
+###
+# Layers - groups of identically setup nodes to perform specific role
+# within this environment
+### 
+
+layers:
+  default:                                  # default configuration for all layers
+    productRepo: ${repo.product}            # repo to install products from
+    fixRepo:     ${repo.fix}                # repo to install fixes from
+ 
+  spm:
+    description: Management layer of SPM's
+    fixRepo:     ${repo.fix.spm}            # repo to install fixes from
+    templates:   ${spm.configure}
+
+  dbc:
+    description: Database configuration
+    templates:   ${dbc.configure}
+    databases:
+      dbc-components:
+        components:  ${db.components}
+        version:     ${db.component.version}
+        db.type:     ${db.type}
+        db.url:      ${db.url}
+        db.username: ${db.username}
+        db.password: ${db.password}
+        db.name:     ${db.name}
+
+
+      dbc-products:
+        products:    ${db.products}
+        version:     ${db.product.version}
+        db.type:     ${db.type}
+        db.url:      ${db.url}
+        db.username: ${db.username}
+        db.password: ${db.password}
+        db.name:     ${db.name}
+
+  um:                                      
+    description: Messaging Layer based on Universal Messaging cluster
+    templates:   ${um.configure}
+      
+  tc:
+    description: Cache Layer based on Terracotta Server Array cluster
+    templates:   ${tc.configure}
+  
+  is:
+    description: Business Process Management layer based on Integration Server
+    templates:   ${is.configure}
+      
+
+    
+###
+# Inline templates - customized product list, fix list, runtime instances, files and configuration
+###
+
+templates:
+
+# Platform - workaround for fix installation
+
+  osgi-tuneup:
+    fixes:       ${osgi.fixes} # must install OSGI agent fix first
+    products:
+      OSGI:
+
+# Platform Manager
+
+  spm-tuneup:
+    description: SPM customizations
+    fixes:       ${spm.fixes}
+    products:
+#      SUM:       # Ensure we have SUM installed
+      SPM:
+      # super set of all plugins
+      TESspm:
+      ISspm:
+      NUMspm:
+
+
+# Database Configuration
+
+  dbc:
+    description: Database Configurator
+    products:
+      DatabaseComponentConfigurator:
+
+# Universal Messaging
+
+  um-server:                                   
+    description: First UM server instance
+    licenses:
+      "UniversalMessaging/server/templates/licence.xml": ${um.license.key.alias}
+   #   "UniversalMessaging/server/${um.instance.name}/licence.xml": ${um.license.key.alias} 
+    fixes: ${um.fixes}
+    products:
+      NUMRealmServer:                                              # main UM product id
+        ${um.instance.name}:                                              # instance realm name
+          instance.port: ${um.instance.port}                       # instance port
+          instance.ip:   ${node.host}
+          license.file:  UniversalMessaging/server/templates/licence.xml
+          runtimeComponentId: Universal-Messaging-umserver # hint for CC to skip instance creation if it exists
+          configuration:
+            Universal-Messaging-umserver: 
+              COMMON-MEMORY:                                       # make a label to re-use configuration
+                COMMON-MEMORY:                                     # customize JVM memory
+                  InitSize: ${um.memory.init}
+                  MaxSize:  ${um.memory.max}
+
+# Terracotta Server 
+
+  tc-server:
+    licenses:
+      "common/conf/terracotta-license.key": ${tc.license.key.alias}
+      "Terracotta/terracotta-license.key": ${tc.license.key.alias} 
+    fixes: ${tc.fixes}
+    products:
+      TES:
+
+
+  is-server: # Custom IS BPM setup
+    description: BPM layer can be single server or a cluster
+    licenses:
+      "IntegrationServer/config/licenseKey.xml": ${is.license.key.alias}
+      "IntegrationServer/instances/${is.instance.name}/config/licenseKey.xml": ${is.license.key.alias}  
+      "common/conf/terracotta-license.key": ${tc.license.key.alias} 
+    fixes: ${is.fixes}
+    products:
+      jdbcAdapter:
+      integrationServer: # the core IS product that owns the instance
+        ${is.instance.name}:
+          primary.port:    ${is.primary.port}
+          diagnostic.port: ${is.diagnostic.port}
+          jmx.port:        ${is.jmx.port}
+          license.file:    IntegrationServer/config/licenseKey.xml
+          install.service: ${is.install.service}
+          package.list:    WmJDBCAdapter
+          db.type:         ${db.type}
+          db.url:          "${db.url}"
+          db.username:     ${db.username}
+          db.password:     ${db.password}
+          db.alias:        Default
+
+
+
+
+###
+# Provisioning map of layers to nodes for each environment type
+###
+
+provision:
+   default:
+    spm:   ["${spm.alias}"]
+    dbc:   ["${dbc.alias}"]
+    um:    ["${spm.alias}"]
+    tc:    ["${spm.alias}"]
+    is:   ["${spm.alias}"]
+ 
+
+
+
+nodes:
+   default:
+    default:
+      port:   ${spm.port}
+      secure: ${spm.secure}
+      bootstrapInfo:
+        installDir:   ${install.dir}
+        repoName:     ${repo.spm}                     
+        platform:     ${os.platform}
+        distribution: ${spm.distribution}
+        useImage:     ${spm.useImage}
+        port:         ${os.port}
+        credentials:
+          userName:   ${os.username}
+          password:   ${os.password}
+          authenticationMethod: ${os.auth.method}
+          privateKey: ${os.auth.key}
+
+
+migration:    
+   options: 
+    backup: 
+      excludes: ["*.log"] #OPTIONAL backup archive excludes, defaults to ["*.log", "*.jar", "*.zip"]               
+   source:  
+    default:
+       spm: ["${spm.alias}"]
+       dbc: ["${dbc.alias}"]
+       um:  ["${spm.alias}"]
+       tc:  ["${spm.alias}"]
+       is: ["${spm.alias}"]
+
+
+   nodes:                    
+    default:
+      default:
+#    port:   ${src.spm.port}
+#    secure: ${src.spm.secure}
+       port:   ${spm.port}
+       secure: ${spm.secure}       
+       bootstrapInfo:
+#         installDir:   ${install.dir}
+         installDir:   ${src.install.dir}         
+         repoName:     ${repo.spm}                     
+         platform:     ${os.platform}
+         distribution: ${spm.distribution}
+         useImage:     ${spm.useImage}
+         port:         ${os.port}
+         credentials:
+           userName:   ${os.username}
+           password:   ${os.password}
+           authenticationMethod: ${os.auth.method}
+           privateKey: ${os.auth.key}
+
+
