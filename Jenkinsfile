@@ -112,6 +112,10 @@ pipeline {
 								bat 'git clone --recursive http://irepo.eur.ad.sag/scm/devops/command-central.git'
 								echo "Completed: checking out the CCE GIT project in on-premise setup"
 							}
+							dir('C:/CloudCheckOut/command-central/cc-server'){
+								bat 'rmdir antcc /s /q'
+								bat 'git clone --recursive -b release/103oct2018 https://github.com/SoftwareAG/sagdevops-antcc.git'
+							}
 						}
 					}
 				}
