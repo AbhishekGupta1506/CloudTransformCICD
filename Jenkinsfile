@@ -113,8 +113,11 @@ pipeline {
 								echo "Completed: checking out the CCE GIT project in on-premise setup"
 							}
 							dir('C:/CloudCheckOut/command-central/cc-server'){
+								bat 'dir'
 								bat 'rmdir antcc /s /q'
+								bat 'dir'
 								bat 'git clone --recursive -b release/103oct2018 https://github.com/SoftwareAG/sagdevops-antcc.git'
+								bat 'dir'
 							}
 						}
 					}
