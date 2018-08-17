@@ -116,7 +116,7 @@ pipeline {
 								bat 'dir'
 								bat 'rmdir antcc /s /q'
 								bat 'dir'
-								bat 'git clone --recursive -b release/103oct2018 https://github.com/SoftwareAG/sagdevops-antcc.git'
+								bat 'git clone --recursive -b release/103oct2018 https://github.com/SoftwareAG/sagdevops-antcc.git antcc'
 								bat 'dir'
 							}
 						}
