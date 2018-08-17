@@ -217,9 +217,9 @@ pipeline {
 							}
 							echo "Start: Migrate On-Premise 912 to 10.3"
 							//bat 'mkdir C:\\Users\\Administrator\\sag\\cc\\profiles\\CCE\\data\\templates\\composite\\sag-ic-migration'
-							bat 'copy C:\\CloudCheckOut\\CloudTransformCICD\\CCE\\ C:\\Users\\Administrator\\sag\\cc\\profiles\\CCE\\data\\templates\\composite\\sag-ic-migration\\'
-							dir('C:/Users/Administrator/sag/cc/profiles/CCE/bin'){
-								bat 'sagcc exec templates composite apply sag-ic-migration -i C:/Users/Administrator/sag/cc/profiles/CCE/data/templates/composite/sag-ic-migration/env.properties'
+							//bat 'copy C:\\CloudCheckOut\\CloudTransformCICD\\CCE\\ C:\\Users\\Administrator\\sag\\cc\\profiles\\CCE\\data\\templates\\composite\\sag-ic-migration\\'
+							dir('C:/Users/Administrator/sag/cc/CommandCentral/client/bin'){
+								bat 'sagcc exec templates composite apply sag-ic-migration -i C:/Users/Administrator/sag/cc/profiles/CCE/data/templates/composite/sag-ic-migration/env.properties -p manage'
 							}
 							echo "Completed: Migrate On-Premise 912 to 10.3"
 						}
