@@ -20,22 +20,22 @@ pipeline {
 					steps{
 							sh 'echo $JAVA_HOME'
 							sh 'java -version'
-							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
+							/*vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
      						vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMBLRPT05'], serverName: 'vsphere_cloud'
-							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'
-							//vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
+							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'*/
+							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
 							sleep 10
-							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
+							/*vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
 							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMBLRPT05'], serverName: 'vsphere_cloud'
-							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'
-							//vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
+							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'*/
+							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
 							sleep 180
 					}
 		}
 		stage('Checkout jobs'){
 			parallel{
 
-				stage('Checkout CloudDeployment Automation project in CTP') {
+				/*stage('Checkout CloudDeployment Automation project in CTP') {
 					agent {
 						label 'CTP'
 					}
@@ -85,9 +85,9 @@ pipeline {
 							}
 						}
 					}
-				}
+				}*/
 
-				/*stage('checkout designer'){
+				stage('checkout designer'){
 					agent{
 						label 'Designer'
 					}
@@ -95,19 +95,33 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut'){
 								echo "Started: checking out the GIT project in designer setup"
-								bat 'git clone -b dev --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+								bat 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								echo "Completed: checking out the GIT project in designer setup"
 							}
 						}
 					}
-				}*/
+				}
+				stage('checkout CCE project'){
+					agent{
+						label 'Designer'
+					}
+					steps{
+						script{
+							dir('C:/CloudCheckOut'){
+								echo "Started: checking out the CCE GIT project in on-premise setup"
+								bat 'git clone --recursive http://irepo.eur.ad.sag/scm/devops/command-central.git'
+								echo "Completed: checking out the CCE GIT project in on-premise setup"
+							}
+						}
+					}
+				}
 			}
 		}
 		
 		stage('Install products') {
 			parallel {
 				
-				stage ('Install CTP on cloud setup'){
+				/*stage ('Install CTP on cloud setup'){
 					agent{label 'CTP'}
 					steps {
 						sh 'postfix stop'
@@ -165,8 +179,8 @@ pipeline {
 							}
 						}
 					}
-				}
-				/*stage('Installing the Designer') {
+				}*/
+				stage('Installing the Designer') {
 
 					agent {
 						label 'Designer'
@@ -180,7 +194,30 @@ pipeline {
 							}
 						}
 					}
-				}*/
+				}
+
+				stage('Migrate On-Premise 912 to 10.3') {
+
+					agent {
+						label 'Designer'
+					}
+					steps{
+						script{
+							dir('C:/CloudCheckOut/command-central'){
+								echo "Start: CCE installation"
+								bat 'ant boot -Dbootstrap=blr'
+								echo "Completed: CCE installation"
+							}
+							echo "Start: Migrate On-Premise 912 to 10.3"
+							bat 'mkdir C:/Users/Administrator/sag/cc/profiles/CCE/data/templates/composite/sag-ic-migration'
+							bat 'copy C:/CloudCheckOut/CloudTransformCICD/CCE/ C:/Users/Administrator/sag/cc/profiles/CCE/data/templates/composite/sag-ic-migration/'
+							dir('C:/Users/Administrator/sag/cc/profiles/CCE/bin'){
+								bat 'sagcc exec templates composite apply sag-ic-migration -i C:/Users/Administrator/sag/cc/profiles/CCE/data/templates/composite/sag-ic-migration/env.properties'
+							}
+							echo "Completed: Migrate On-Premise 912 to 10.3"
+						}
+					}
+				}
 
 			}
 	  }
