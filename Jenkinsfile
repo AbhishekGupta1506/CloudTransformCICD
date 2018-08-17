@@ -29,7 +29,7 @@ pipeline {
 							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMBLRPT05'], serverName: 'vsphere_cloud'
 							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'*/
 							//vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
-							sleep 180
+							//sleep 180
 					}
 		}
 		stage('Checkout jobs'){
