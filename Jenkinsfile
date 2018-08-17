@@ -89,7 +89,7 @@ pipeline {
 
 				stage('checkout designer'){
 					agent{
-						label 'Designer'
+						label 'DesignerWin'
 					}
 					steps{
 						script{
@@ -103,7 +103,7 @@ pipeline {
 				}
 				stage('checkout CCE project'){
 					agent{
-						label 'Designer'
+						label 'DesignerWin'
 					}
 					steps{
 						script{
@@ -183,7 +183,7 @@ pipeline {
 				stage('Installing the Designer') {
 
 					agent {
-						label 'Designer'
+						label 'DesignerWin'
 					}
 					steps{
 						script{
@@ -199,7 +199,7 @@ pipeline {
 				stage('Migrate On-Premise 912 to 10.3') {
 
 					agent {
-						label 'Designer'
+						label 'DesignerWin'
 					}
 					steps{
 						script{
