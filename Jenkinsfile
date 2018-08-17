@@ -95,7 +95,7 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut'){
 								echo "Started: checking out the GIT project in designer setup"
-								bat 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+								//bat 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								echo "Completed: checking out the GIT project in designer setup"
 							}
 						}
@@ -109,14 +109,14 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut'){
 								echo "Started: checking out the CCE GIT project in on-premise setup"
-								bat 'git clone --recursive http://irepo.eur.ad.sag/scm/devops/command-central.git'
+								//bat 'git clone --recursive http://irepo.eur.ad.sag/scm/devops/command-central.git'
 								echo "Completed: checking out the CCE GIT project in on-premise setup"
 							}
 							dir('C:/CloudCheckOut/command-central/cc-server'){
 								bat 'dir'
-								bat 'rmdir antcc /s /q'
+								//bat 'rmdir antcc /s /q'
 								bat 'dir'
-								bat 'git clone --recursive -b release/103oct2018 https://github.com/SoftwareAG/sagdevops-antcc.git antcc'
+							//	bat 'git clone --recursive -b release/103oct2018 https://github.com/SoftwareAG/sagdevops-antcc.git antcc'
 								bat 'dir'
 							}
 						}
@@ -196,7 +196,7 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut/CloudTransformCICD/installer'){
 								echo "Start: Designer installation"
-								bat 'ant install.designer'
+								//bat 'ant install.designer'
 								echo "Completed: Designer installation"
 							}
 						}
@@ -212,11 +212,11 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut/command-central'){
 								echo "Start: CCE installation"
-								bat 'ant boot -Dbootstrap=blr'
+								//bat 'ant boot -Dbootstrap=blr'
 								echo "Completed: CCE installation"
 							}
 							echo "Start: Migrate On-Premise 912 to 10.3"
-							bat 'mkdir C:/Users/Administrator/sag/cc/profiles/CCE/data/templates/composite/sag-ic-migration'
+							bat 'mkdir C:\\Users\\Administrator\\sag\\cc\\profiles\\CCE\\data\\templates\\composite\\sag-ic-migration'
 							bat 'copy C:/CloudCheckOut/CloudTransformCICD/CCE/ C:/Users/Administrator/sag/cc/profiles/CCE/data/templates/composite/sag-ic-migration/'
 							dir('C:/Users/Administrator/sag/cc/profiles/CCE/bin'){
 								bat 'sagcc exec templates composite apply sag-ic-migration -i C:/Users/Administrator/sag/cc/profiles/CCE/data/templates/composite/sag-ic-migration/env.properties'
