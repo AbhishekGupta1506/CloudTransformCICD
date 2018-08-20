@@ -213,7 +213,7 @@ pipeline {
 							dir('C:/CloudCheckOut/command-central'){
 								echo "Start: CCE installation"
 								//bat 'ant boot -Dbootstrap=blr'
-								bat 'ant up'
+								//bat 'ant up'
 								echo "Completed: CCE installation"
 							}
 							echo "Start: Migrate On-Premise 912 to 10.3"
