@@ -121,7 +121,13 @@ environments:
 # Layers - groups of identically setup nodes to perform specific role
 # within this environment
 ### 
-
+repositories:
+    product:
+      webMethods-10.3:
+        description: 10.3
+        host: ${aqu.host}
+        name: 103oct2018_SIC
+        credentials: REPO-PRODUCT
 layers:
   default:                                  # default configuration for all layers
     productRepo: ${repo.product}            # repo to install products from
