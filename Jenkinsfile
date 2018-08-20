@@ -20,22 +20,22 @@ pipeline {
 					steps{
 							sh 'echo $JAVA_HOME'
 							sh 'java -version'
-							/*vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
+							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
      						vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMBLRPT05'], serverName: 'vsphere_cloud'
-							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'*/
-							//vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
+							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'
+							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
 							sleep 10
-							/*vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
+							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
 							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMBLRPT05'], serverName: 'vsphere_cloud'
-							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'*/
-							//vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
-							//sleep 180
+							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'
+							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
+							sleep 180
 					}
 		}
 		stage('Checkout jobs'){
 			parallel{
 
-				/*stage('Checkout CloudDeployment Automation project in CTP') {
+				stage('Checkout CloudDeployment Automation project in CTP') {
 					agent {
 						label 'CTP'
 					}
@@ -85,7 +85,7 @@ pipeline {
 							}
 						}
 					}
-				}*/
+				}
 
 				stage('checkout designer'){
 					agent{
@@ -95,7 +95,7 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut'){
 								echo "Started: checking out the GIT project in designer setup"
-								//bat 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+								bat 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								echo "Completed: checking out the GIT project in designer setup"
 							}
 						}
@@ -109,14 +109,14 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut'){
 								echo "Started: checking out the CCE GIT project in on-premise setup"
-								//bat 'git clone --recursive http://irepo.eur.ad.sag/scm/devops/command-central.git'
+								bat 'git clone --recursive http://irepo.eur.ad.sag/scm/devops/command-central.git'
 								echo "Completed: checking out the CCE GIT project in on-premise setup"
 							}
 							dir('C:/CloudCheckOut/command-central/cc-server'){
 								bat 'dir'
-								//bat 'rmdir antcc /s /q'
+								bat 'rmdir antcc /s /q'
 								bat 'dir'
-							//	bat 'git clone --recursive -b release/103oct2018 https://github.com/SoftwareAG/sagdevops-antcc.git antcc'
+								bat 'git clone --recursive -b release/103oct2018 https://github.com/SoftwareAG/sagdevops-antcc.git antcc'
 								bat 'dir'
 							}
 						}
@@ -128,7 +128,7 @@ pipeline {
 		stage('Install products') {
 			parallel {
 				
-				/*stage ('Install CTP on cloud setup'){
+				stage ('Install CTP on cloud setup'){
 					agent{label 'CTP'}
 					steps {
 						sh 'postfix stop'
@@ -151,8 +151,8 @@ pipeline {
 				stage ('Run MySql script on cloud setup'){
 					agent{label 'MySQL'}
 					steps {
-						//sh '/etc/init.d/mysql stop'
-						//sh 'mysqld --defaults-file=/usr/my-ipaas.ini -u root 2>1 &'
+						sh '/etc/init.d/mysql stop'
+						sh 'mysqld --defaults-file=/usr/my-ipaas.ini -u root 2>1 &'
 
 						dir('/opt/install'){
 							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
@@ -186,7 +186,7 @@ pipeline {
 							}
 						}
 					}
-				}*/
+				}
 				stage('Installing the Designer') {
 
 					agent {
@@ -196,7 +196,7 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut/CloudTransformCICD/installer'){
 								echo "Start: Designer installation"
-								//bat 'ant install.designer'
+								bat 'ant install.designer'
 								echo "Completed: Designer installation"
 							}
 						}
@@ -212,13 +212,13 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut/command-central'){
 								echo "Start: CCE installation"
-								//bat 'ant boot -Dbootstrap=blr'
-								//bat 'ant up'
+								bat 'ant boot -Dbootstrap=blr'
+								bat 'ant up'
 								echo "Completed: CCE installation"
 							}
 							echo "Start: Migrate On-Premise 912 to 10.3"
-							//bat 'mkdir C:\\Users\\Administrator\\sag\\cc\\profiles\\CCE\\data\\templates\\composite\\sag-ic-migration'
-							//bat 'copy C:\\CloudCheckOut\\CloudTransformCICD\\CCE\\ C:\\Users\\Administrator\\sag\\cc\\profiles\\CCE\\data\\templates\\composite\\sag-ic-migration\\'
+							bat 'mkdir C:\\Users\\Administrator\\sag\\cc\\profiles\\CCE\\data\\templates\\composite\\sag-ic-migration'
+							bat 'copy C:\\CloudCheckOut\\CloudTransformCICD\\CCE\\ C:\\Users\\Administrator\\sag\\cc\\profiles\\CCE\\data\\templates\\composite\\sag-ic-migration\\'
 							dir('C:/Users/Administrator/sag/cc/CommandCentral/client/bin'){
 								bat 'sagcc exec templates composite apply sag-ic-migration -i C:/Users/Administrator/sag/cc/profiles/CCE/data/templates/composite/sag-ic-migration/env.properties -p manage'
 							}

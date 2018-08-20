@@ -23,7 +23,7 @@ environments:
     os.port:      22                        # remote machine SSH port
     install.dir:  ${}           # suite installation directory
 
-    spm.port:       8092                    # SPM connection port
+    spm.port:       ${spm.port}                    # SPM connection port
     spm.secure:     false                   # Use HTTPS connection to SPM: true,false
     spm.memory.max: 512                     # max mem
     spm.configure:  [spm-tuneup,osgi-tuneup]    
