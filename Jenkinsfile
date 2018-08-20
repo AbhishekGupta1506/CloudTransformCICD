@@ -113,11 +113,11 @@ pipeline {
 								echo "Completed: checking out the CCE GIT project in on-premise setup"
 							}
 							dir('C:/CloudCheckOut/command-central/cc-server'){
-								bat 'dir'
+								//bat 'dir'
 								bat 'rmdir antcc /s /q'
-								bat 'dir'
+								//bat 'dir'
 								bat 'git clone --recursive -b release/103oct2018 https://github.com/SoftwareAG/sagdevops-antcc.git antcc'
-								bat 'dir'
+								//bat 'dir'
 							}
 						}
 					}
@@ -136,7 +136,7 @@ pipeline {
 						sh 'memcached -d -u root -m 256'
 						dir('/opt/install'){
 							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
-          					echo "PATH is: $PATH"
+          					//echo "PATH is: $PATH"
 							sh './gradlew -b download.gradle download'
 							sh './gradlew installCTP -x validate'
 
@@ -151,12 +151,12 @@ pipeline {
 				stage ('Run MySql script on cloud setup'){
 					agent{label 'MySQL'}
 					steps {
-						sh '/etc/init.d/mysql stop'
-						sh 'mysqld --defaults-file=/usr/my-ipaas.ini -u root 2>1 &'
+						//sh '/etc/init.d/mysql stop'
+						//sh 'mysqld --defaults-file=/usr/my-ipaas.ini -u root 2>1 &'
 
 						dir('/opt/install'){
 							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
-							echo "PATH is: $PATH"
+							//echo "PATH is: $PATH"
 							sh './gradlew -b download.gradle download' 
 							sh './gradlew executeDatabaseScripts -x validate'
 							sh './gradlew executeCustomSQLScripts -x validate'
