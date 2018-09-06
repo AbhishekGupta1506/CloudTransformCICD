@@ -131,19 +131,21 @@ pipeline {
 				stage ('Install CTP on cloud setup'){
 					agent{label 'CTP'}
 					steps {
-						sh 'postfix stop'
-						sh 'postfix start'
-						sh 'memcached -d -u root -m 256'
+						
 						dir('/opt/install'){
-							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
+							//withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
           					//echo "PATH is: $PATH"
+							sh 'iptables --flush'
+							sh 'chmod -R 777 /opt/install'
+							sh 'rm -rf /opt/install/os_independent/packages/.svn'
 							sh './gradlew -b download.gradle download'
+							sh 'postfix stop &'
+							sh 'postfix start &'
+							sh 'memcached -d -u root -m 256'
+							sh 'chmod -R 777 /opt/install'
 							sh './gradlew installCTP -x validate'
-
-							sh './gradlew installIntegrationWar -x validate'
-
-							sh './gradlew customizeCTP -x validate'	
-							}						
+							sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'	
+							//}						
 						}
 					}
 				}
@@ -151,39 +153,55 @@ pipeline {
 				stage ('Run MySql script on cloud setup'){
 					agent{label 'MySQL'}
 					steps {
-						//sh '/etc/init.d/mysql stop'
-						//sh 'mysqld --defaults-file=/usr/my-ipaas.ini -u root 2>1 &'
-
 						dir('/opt/install'){
-							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
+							//withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
 							//echo "PATH is: $PATH"
-							sh './gradlew -b download.gradle download' 
+							sh 'iptables --flush'
+							sh 'chmod -R 777 /opt/install'
+							sh 'rm -rf /root/.gradle'
+							sh 'rm -rf /opt/install/os_independent/packages/.svn'
+							sh './gradlew -b download.gradle download'
+							sh './gradlew dropDatabases -x validate'
+							sh 'rm -rf /root/.gradle'
+							sh './gradlew -b download.gradle download'
+							sh './gradlew installNginxPlus'
+							sh './gradlew buildNginxConf'
+							sh './gradlew deployNginxConf'
+							sh 'cp config/server.key /usr/local/conf'
+							sh 'cp config/server.crt /usr/local/conf'
 							sh './gradlew executeDatabaseScripts -x validate'
 							sh './gradlew executeCustomSQLScripts -x validate'
 							sh './gradlew apply_10_7_patch -x validate'
 							sh './gradlew apply_10_8_patch -x validate'
 							sh './gradlew executeDatabasePatchScripts -x validate'
-							sh './gradlew customizeDB -x validate'
-							}
+							sh 'rm -rf /opt/install/customize/SoftwareAG/artifacts/.svn'
+							sh './gradlew customizeDB -x validate --stacktrace'
+							//}
 						}
-							sh 'service nginx stop'
-							sh 'service nginx start'
 					}
 				}
 
 				stage ('Install IS+UM on cloud setup'){
 					agent{label 'ISUM'}
 					steps {
-						sh 'service nginx stop'
-
-						sh 'service nginx start'
-
 						dir('/opt/install'){
-							withEnv(['PATH+JAVA_HOME=/home/local/EUR/siqavm/jdk1.8.0_131/bin']) {
-							sh './gradlew -b download.gradle download' 
-							sh './gradlew installIS -x validate'
-							//sh './gradlew installUM -x validate'
-							}
+							//withEnv(['PATH+JAVA_HOME=/home/local/EUR/siqavm/jdk1.8.0_131/bin']) {
+							sh 'iptables --flush' 
+							sh 'chmod -R 777 /opt/install'
+							sh './gradlew -b download.gradle download'
+							sh 'iptables --flush'
+							sh 'rm -rf /opt/install/os_independent/packages/.svn'
+							sh 'mkdir -p  /mnt-efs/wmic/upstream/default'
+							sh 'mkdir -p  /mnt-efs/wmic/upstream/location'
+							sh 'mkdir -p  /mnt-efs/wmic/upstream/container'
+							sh './gradlew installNginxPlus'
+							sh './gradlew installPHPFPM'
+							sh './gradlew buildNginxConf'
+							sh './gradlew deployNginxConf'
+							sh 'chown -R nginx:nginx /mnt-efs'
+							sh './gradlew installIS -x validate --stacktrace'
+							sh 'iptables --flush'
+							//}
 						}
 					}
 				}
@@ -229,14 +247,54 @@ pipeline {
 
 			}
 	  }
-		/*stage('Run tests') {
-			agent{
-				label 'OnPremDesigner'
-			}
-			steps {
-				echo "Run the the test cases here"
-			}
-		}*/
+		stage('Run tests') {
+				stage('Start servers ISUM') {
+					agent {
+						label 'ISUM'
+					}
+					steps {
+						script {
+							//dir('/opt/install'){
+								sh 'iptables --flush'
+								sh '/opt/softwareag/IntegrationServer/instances/default/bin/shutdown.sh'
+								sh '/opt/softwareag/IntegrationServer/instances/default/bin/startup.sh'
+								sh 'sleep 10m'
+								/*
+								status=0;
+   									until [ $status -eq 401 ]
+   									do
+   									status=$(curl -o /dev/null -u myself:XXXXXX -Isw '%{http_code}' http://localhost:5555)
+      									sleep 15
+   									done
+								*/
+								sh 'service php-fpm stop'
+								sh 'service php-fpm start'
+								sh 'service nginx stop'
+								sh 'service nginx start'
+							//}
+						}
+					}
+				}
+				stage('Start servers CTP') {
+					agent {
+						label 'CTP'
+					}
+					steps {
+						script {
+							//dir('/opt/install'){
+								sh 'memcached -d -u root -m 256'
+								sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
+								sh 'sleep 1m'
+								sh 'iptables --flush'
+								sh './gradlew installIntegrationWar -x validate'
+								sh './gradlew customizeCTP -x validate'
+								sh '/opt/softwareag/profiles/CTP/bin/startup.sh'
+								sh 'sleep 10m'
+							//}
+						}
+					}
+				}
+
 	}
 	post {	
 				always {
