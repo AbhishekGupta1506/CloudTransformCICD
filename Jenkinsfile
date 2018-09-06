@@ -247,54 +247,52 @@ pipeline {
 
 			}
 	  }
-		stage('Run tests') {
-				stage('Start servers ISUM') {
-					agent {
-						label 'ISUM'
-					}
-					steps {
-						script {
-							//dir('/opt/install'){
-								sh 'iptables --flush'
-								sh '/opt/softwareag/IntegrationServer/instances/default/bin/shutdown.sh'
-								sh '/opt/softwareag/IntegrationServer/instances/default/bin/startup.sh'
-								sh 'sleep 10m'
-								/*
-								status=0;
-   									until [ $status -eq 401 ]
-   									do
-   									status=$(curl -o /dev/null -u myself:XXXXXX -Isw '%{http_code}' http://localhost:5555)
-      									sleep 15
-   									done
-								*/
-								sh 'service php-fpm stop'
-								sh 'service php-fpm start'
-								sh 'service nginx stop'
-								sh 'service nginx start'
-							//}
-						}
-					}
-				}
-				stage('Start servers CTP') {
-					agent {
-						label 'CTP'
-					}
-					steps {
-						script {
-							//dir('/opt/install'){
-								sh 'memcached -d -u root -m 256'
-								sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
-								sh 'sleep 1m'
-								sh 'iptables --flush'
-								sh './gradlew installIntegrationWar -x validate'
-								sh './gradlew customizeCTP -x validate'
-								sh '/opt/softwareag/profiles/CTP/bin/startup.sh'
-								sh 'sleep 10m'
-							//}
-						}
-					}
-				}
+	stage('Start servers ISUM') {
+		agent {
+			label 'ISUM'
 		}
+		steps {
+			script {
+				//dir('/opt/install'){
+					sh 'iptables --flush'
+					sh '/opt/softwareag/IntegrationServer/instances/default/bin/shutdown.sh'
+					sh '/opt/softwareag/IntegrationServer/instances/default/bin/startup.sh'
+					sh 'sleep 10m'
+					/*
+					status=0;
+						until [ $status -eq 401 ]
+						do
+						status=$(curl -o /dev/null -u myself:XXXXXX -Isw '%{http_code}' http://localhost:5555)
+							sleep 15
+						done
+					*/
+					sh 'service php-fpm stop'
+					sh 'service php-fpm start'
+					sh 'service nginx stop'
+					sh 'service nginx start'
+				//}
+			}
+		}
+	}
+	stage('Start servers CTP') {
+		agent {
+			label 'CTP'
+		}
+		steps {
+			script {
+				//dir('/opt/install'){
+					sh 'memcached -d -u root -m 256'
+					sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
+					sh 'sleep 1m'
+					sh 'iptables --flush'
+					sh './gradlew installIntegrationWar -x validate'
+					sh './gradlew customizeCTP -x validate'
+					sh '/opt/softwareag/profiles/CTP/bin/startup.sh'
+					sh 'sleep 10m'
+				//}
+			}
+		}
+	}
 
 	}
 	post {	
