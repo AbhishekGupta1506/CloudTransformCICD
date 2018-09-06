@@ -76,8 +76,9 @@ pipeline {
 					steps {
 						script {
 							dir('/opt/install'){
-								sh 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
+								//sh 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
+								sh 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								sh 'chmod 777 *'
 								//remove once automation is fixed from WCIC team
 								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/ISUM/gradle.properties /opt/install'
