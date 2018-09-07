@@ -134,19 +134,19 @@ pipeline {
 					steps {
 						
 						dir('/opt/install'){
-							//withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
+							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
           					//echo "PATH is: $PATH"
-							sh 'iptables --flush'
-							sh 'chmod -R 777 /opt/install'
-							sh 'rm -rf /opt/install/os_independent/packages/.svn'
-							sh './gradlew -b download.gradle download'
-							sh 'postfix stop &'
-							sh 'postfix start &'
-							sh 'memcached -d -u root -m 256'
-							sh 'chmod -R 777 /opt/install'
-							sh './gradlew installCTP -x validate'
-							sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'	
-							//}						
+								sh 'iptables --flush'
+								sh 'chmod -R 777 /opt/install'
+								sh 'rm -rf /opt/install/os_independent/packages/.svn'
+								sh './gradlew -b download.gradle download'
+								sh 'postfix stop &'
+								sh 'postfix start &'
+								sh 'memcached -d -u root -m 256'
+								sh 'chmod -R 777 /opt/install'
+								sh './gradlew installCTP -x validate'
+								sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'	
+							}						
 						}
 					}
 				}
@@ -155,7 +155,7 @@ pipeline {
 					agent{label 'MySQL'}
 					steps {
 						dir('/opt/install'){
-							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131']) {
+							withEnv(['PATH+JAVA_HOME=/usr/java/jdk1.8.0_172/bin']) {
 							//echo "PATH is: $PATH"
 								sh 'iptables --flush'
 								sh 'chmod -R 777 /opt/install'
