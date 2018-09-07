@@ -155,29 +155,29 @@ pipeline {
 					agent{label 'MySQL'}
 					steps {
 						dir('/opt/install'){
-							//withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
+							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131']) {
 							//echo "PATH is: $PATH"
-							sh 'iptables --flush'
-							sh 'chmod -R 777 /opt/install'
-							sh 'rm -rf /root/.gradle'
-							sh 'rm -rf /opt/install/os_independent/packages/.svn'
-							sh './gradlew -b download.gradle download'
-							sh './gradlew dropDatabases -x validate'
-							sh 'rm -rf /root/.gradle'
-							sh './gradlew -b download.gradle download'
-							sh './gradlew installNginxPlus'
-							sh './gradlew buildNginxConf'
-							sh './gradlew deployNginxConf'
-							sh 'cp config/server.key /usr/local/conf'
-							sh 'cp config/server.crt /usr/local/conf'
-							sh './gradlew executeDatabaseScripts -x validate'
-							sh './gradlew executeCustomSQLScripts -x validate'
-							sh './gradlew apply_10_7_patch -x validate'
-							sh './gradlew apply_10_8_patch -x validate'
-							sh './gradlew executeDatabasePatchScripts -x validate'
-							sh 'rm -rf /opt/install/customize/SoftwareAG/artifacts/.svn'
-							sh './gradlew customizeDB -x validate --stacktrace'
-							//}
+								sh 'iptables --flush'
+								sh 'chmod -R 777 /opt/install'
+								sh 'rm -rf /root/.gradle'
+								sh 'rm -rf /opt/install/os_independent/packages/.svn'
+								sh './gradlew -b download.gradle download'
+								sh './gradlew dropDatabases -x validate'
+								sh 'rm -rf /root/.gradle'
+								sh './gradlew -b download.gradle download'
+								sh './gradlew installNginxPlus'
+								sh './gradlew buildNginxConf'
+								sh './gradlew deployNginxConf'
+								sh 'cp config/server.key /usr/local/conf'
+								sh 'cp config/server.crt /usr/local/conf'
+								sh './gradlew executeDatabaseScripts -x validate'
+								sh './gradlew executeCustomSQLScripts -x validate'
+								sh './gradlew apply_10_7_patch -x validate'
+								sh './gradlew apply_10_8_patch -x validate'
+								sh './gradlew executeDatabasePatchScripts -x validate'
+								sh 'rm -rf /opt/install/customize/SoftwareAG/artifacts/.svn'
+								sh './gradlew customizeDB -x validate --stacktrace'
+							}
 						}
 					}
 				}
@@ -186,23 +186,23 @@ pipeline {
 					agent{label 'ISUM'}
 					steps {
 						dir('/opt/install'){
-							//withEnv(['PATH+JAVA_HOME=/home/local/EUR/siqavm/jdk1.8.0_131/bin']) {
-							sh 'iptables --flush' 
-							sh 'chmod -R 777 /opt/install'
-							sh './gradlew -b download.gradle download'
-							sh 'iptables --flush'
-							sh 'rm -rf /opt/install/os_independent/packages/.svn'
-							sh 'mkdir -p  /mnt-efs/wmic/upstream/default'
-							sh 'mkdir -p  /mnt-efs/wmic/upstream/location'
-							sh 'mkdir -p  /mnt-efs/wmic/upstream/container'
-							sh './gradlew installNginxPlus'
-							sh './gradlew installPHPFPM'
-							sh './gradlew buildNginxConf'
-							sh './gradlew deployNginxConf'
-							sh 'chown -R nginx:nginx /mnt-efs'
-							sh './gradlew installIS -x validate --stacktrace'
-							sh 'iptables --flush'
-							//}
+							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
+								sh 'iptables --flush' 
+								sh 'chmod -R 777 /opt/install'
+								sh './gradlew -b download.gradle download'
+								sh 'iptables --flush'
+								sh 'rm -rf /opt/install/os_independent/packages/.svn'
+								sh 'mkdir -p  /mnt-efs/wmic/upstream/default'
+								sh 'mkdir -p  /mnt-efs/wmic/upstream/location'
+								sh 'mkdir -p  /mnt-efs/wmic/upstream/container'
+								sh './gradlew installNginxPlus'
+								sh './gradlew installPHPFPM'
+								sh './gradlew buildNginxConf'
+								sh './gradlew deployNginxConf'
+								sh 'chown -R nginx:nginx /mnt-efs'
+								sh './gradlew installIS -x validate --stacktrace'
+								sh 'iptables --flush'
+							}
 						}
 					}
 				}
