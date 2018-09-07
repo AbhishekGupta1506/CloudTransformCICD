@@ -187,21 +187,21 @@ pipeline {
 					steps {
 						dir('/opt/install'){
 							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
-								sh 'iptables --flush' 
-								sh 'chmod -R 777 /opt/install'
-								sh './gradlew -b download.gradle download'
-								sh 'iptables --flush'
-								sh 'rm -rf /opt/install/os_independent/packages/.svn'
-								sh 'mkdir -p  /mnt-efs/wmic/upstream/default'
-								sh 'mkdir -p  /mnt-efs/wmic/upstream/location'
-								sh 'mkdir -p  /mnt-efs/wmic/upstream/container'
-								sh './gradlew installNginxPlus'
-								sh './gradlew installPHPFPM'
-								sh './gradlew buildNginxConf'
-								sh './gradlew deployNginxConf'
-								sh 'chown -R nginx:nginx /mnt-efs'
-								sh './gradlew installIS -x validate --stacktrace'
-								sh 'iptables --flush'
+									sh 'iptables --flush' 
+									sh 'chmod -R 777 /opt/install'
+									sh './gradlew -b download.gradle download'
+									sh 'iptables --flush'
+									sh 'rm -rf /opt/install/os_independent/packages/.svn'
+									sh 'mkdir -p  /mnt-efs/wmic/upstream/default'
+									sh 'mkdir -p  /mnt-efs/wmic/upstream/location'
+									sh 'mkdir -p  /mnt-efs/wmic/upstream/container'
+									sh './gradlew installNginxPlus'
+									sh './gradlew installPHPFPM'
+									sh './gradlew buildNginxConf'
+									sh './gradlew deployNginxConf'
+									sh 'chown -R nginx:nginx /mnt-efs'
+									sh './gradlew installIS -x validate --stacktrace'
+									sh 'iptables --flush'
 							}
 						}
 					}
@@ -281,7 +281,7 @@ pipeline {
 		}
 		steps {
 			script {
-				//dir('/opt/install'){
+				dir('/opt/install'){
 					sh 'memcached -d -u root -m 256'
 					sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
 					sh 'sleep 1m'
@@ -290,7 +290,7 @@ pipeline {
 					sh './gradlew customizeCTP -x validate'
 					sh '/opt/softwareag/profiles/CTP/bin/startup.sh'
 					sh 'sleep 10m'
-				//}
+				}
 			}
 		}
 	}
