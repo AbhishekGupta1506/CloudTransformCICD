@@ -282,14 +282,16 @@ pipeline {
 		steps {
 			script {
 				dir('/opt/install'){
-					sh 'memcached -d -u root -m 256'
-					sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
-					sh 'sleep 1m'
-					sh 'iptables --flush'
-					sh './gradlew installIntegrationWar -x validate'
-					sh './gradlew customizeCTP -x validate'
-					sh '/opt/softwareag/profiles/CTP/bin/startup.sh'
-					sh 'sleep 10m'
+					withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
+						sh 'memcached -d -u root -m 256'
+						sh '/opt/softwareag/profiles/CTP/bin/shutdown.sh'
+						sh 'sleep 1m'
+						sh 'iptables --flush'
+						sh './gradlew installIntegrationWar -x validate'
+						sh './gradlew customizeCTP -x validate'
+						sh '/opt/softwareag/profiles/CTP/bin/startup.sh'
+						sh 'sleep 10m'
+					}
 				}
 			}
 		}
