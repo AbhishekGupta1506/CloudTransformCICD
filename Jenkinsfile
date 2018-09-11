@@ -44,9 +44,9 @@ pipeline {
 							dir('/opt/install'){
 								sh 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
-								sh 'chmod 777 *'
+								//sh 'chmod 777 *'
 								//remove once automation is fixed from WCIC team
-								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/CTP/gradle.properties /opt/install'
+								
 							}
 						}
 					}
@@ -61,9 +61,9 @@ pipeline {
 							dir('/opt/install'){
 								sh 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
-								sh 'chmod 777 *'
+								//sh 'chmod 777 *'
 								//remove once automation is fixed from WCIC team
-								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/SQL/gradle.properties /opt/install'
+								
 							}
 						}
 					}
@@ -79,10 +79,10 @@ pipeline {
 								//sh 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
 								checkout([$class: 'SubversionSCM', locations: [[credentialsId: 'abgWC', local: '.', remote: 'http://svndae.hq.sag:1818/svn/sag/integration-live/installation/trunk/']]])
 								sh 'git clone -b test --recursive https://github.com/AbhishekGupta1506/CloudTransformCICD.git'
-								sh 'chmod 777 *'
+								//sh 'chmod 777 *'
 								//remove once automation is fixed from WCIC team
-								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/ISUM/gradle.properties /opt/install'
-								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/ISUM/um.txt /opt/install/templates/um.txt'
+								
+								//sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/ISUM/um.txt /opt/install/templates/um.txt'
 							}
 						}
 					}
@@ -139,6 +139,8 @@ pipeline {
 								sh 'iptables --flush'
 								sh 'chmod -R 777 /opt/install'
 								sh 'rm -rf /opt/install/os_independent/packages/.svn'
+								sh 'mv /opt/install/gradle.properties /opt/install/gradlebackup.properties'
+								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/CTP/gradle.properties /opt/install'
 								sh './gradlew -b download.gradle download'
 								sh 'postfix stop &'
 								sh 'postfix start &'
@@ -161,6 +163,8 @@ pipeline {
 								sh 'chmod -R 777 /opt/install'
 								sh 'rm -rf /root/.gradle'
 								sh 'rm -rf /opt/install/os_independent/packages/.svn'
+								sh 'mv /opt/install/gradle.properties /opt/install/gradlebackup.properties'
+								sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/SQL/gradle.properties /opt/install'
 								sh './gradlew -b download.gradle download'
 								sh './gradlew dropDatabases -x validate'
 								sh 'rm -rf /root/.gradle'
@@ -177,6 +181,9 @@ pipeline {
 								sh './gradlew executeDatabasePatchScripts -x validate'
 								sh 'rm -rf /opt/install/customize/SoftwareAG/artifacts/.svn'
 								sh './gradlew customizeDB -x validate --stacktrace'
+								sh 'service nginx stop'
+								sh 'service nginx start	'
+								sh 'service nginx status'
 							}
 						}
 					}
@@ -189,6 +196,8 @@ pipeline {
 							withEnv(['PATH+JAVA_HOME=/home/svtuser/jdk1.8.0_131/bin']) {
 									sh 'iptables --flush' 
 									sh 'chmod -R 777 /opt/install'
+									sh 'mv /opt/install/gradle.properties /opt/install/gradlebackup.properties'
+									sh 'cp /opt/install/CloudTransformCICD/CloudDeploymentAssets/ISUM/gradle.properties /opt/install'
 									sh './gradlew -b download.gradle download'
 									sh 'iptables --flush'
 									sh 'rm -rf /opt/install/os_independent/packages/.svn'
@@ -201,7 +210,9 @@ pipeline {
 									sh './gradlew deployNginxConf'
 									sh 'chown -R nginx:nginx /mnt-efs'
 									sh './gradlew installIS -x validate --stacktrace'
+									//sh './gradlew installUM -x validate --stacktrace'
 									sh 'iptables --flush'
+									//sh '/opt/softwareag/IntegrationServer/instances/default/bin/shutdown.sh'
 							}
 						}
 					}
