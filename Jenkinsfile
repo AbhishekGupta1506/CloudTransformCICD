@@ -231,7 +231,7 @@ pipeline {
 							}
 						}
 					}
-				}/*
+				}*/
 
 				/*stage('Migrate On-Premise 912 to 10.3') {
 
@@ -255,7 +255,7 @@ pipeline {
 							echo "Completed: Migrate On-Premise 912 to 10.3"
 						}
 					}
-				}/*
+				}*/
 
 			}
 	  }
