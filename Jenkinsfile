@@ -23,12 +23,12 @@ pipeline {
 							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'
      						vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
 							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMCCE02'], serverName: 'vsphere_cloud'
-							vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
+							//vSphere buildStep: [$class: 'PowerOff', evenIfSuspended: false, shutdownGracefully: false, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
 							sleep 10
 							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO03'], serverName: 'vsphere_cloud'
 							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMISPRO01'], serverName: 'vsphere_cloud'
 							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMCCE02'], serverName: 'vsphere_cloud'
-							vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
+							//vSphere buildStep: [$class: 'PowerOn', timeoutInSeconds: 180, vm: 'VMSIQACLOUD02'], serverName: 'vsphere_cloud'
 							sleep 180
 					}
 		}
@@ -88,7 +88,7 @@ pipeline {
 					}
 				}
 
-				stage('checkout designer'){
+				/*stage('checkout designer'){
 					agent{
 						label 'DesignerWin'
 					}
@@ -101,8 +101,8 @@ pipeline {
 							}
 						}
 					}
-				}
-				stage('checkout CCE project'){
+				}*/
+				/*stage('checkout CCE project'){
 					agent{
 						label 'DesignerWin'
 					}
@@ -122,7 +122,7 @@ pipeline {
 							}
 						}
 					}
-				}
+				}*/
 			}
 		}
 		
@@ -217,7 +217,7 @@ pipeline {
 						}
 					}
 				}
-				stage('Installing the Designer') {
+				/*stage('Installing the Designer') {
 
 					agent {
 						label 'DesignerWin'
@@ -231,9 +231,9 @@ pipeline {
 							}
 						}
 					}
-				}
+				}/*
 
-				stage('Migrate On-Premise 912 to 10.3') {
+				/*stage('Migrate On-Premise 912 to 10.3') {
 
 					agent {
 						label 'DesignerWin'
@@ -255,7 +255,7 @@ pipeline {
 							echo "Completed: Migrate On-Premise 912 to 10.3"
 						}
 					}
-				}
+				}/*
 
 			}
 	  }
