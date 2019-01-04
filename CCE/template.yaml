@@ -16,8 +16,8 @@ environments:
     # Remote system configuration 
 
     os.platform:  W64                  # remote machine OS platform code
-    os.username:  ${user.name}              # remote machine SSH username, default CCE process user account (as java system property)
-    os.password:  ${os.username}            # remote machine SSH password
+    os.username:  ${os.username}              # remote machine SSH username, default CCE process user account (as java system property)
+    os.password:  ${os.password}            # remote machine SSH password
     os.auth.method: PASSWORD                # remote machine authentication method: PASSWORD,INTERACTIVE,CERTIFICATE
     os.auth.key:  ${user.home}/.ssh/id_rsa  # keyfile for CERTIFICATE auth method
     os.port:      22                        # remote machine SSH port
@@ -272,19 +272,67 @@ templates:
 # Provisioning map of layers to nodes for each environment type
 ###
 
+migration:
+  options:                       # OPTIONAL options to prepare source node for migration
+    snapshot:                    # OPTIONAL create snapshot template from each source node
+      execute: false             # OPTIONAL execute snapshot? true|false, defaults to true
+    pause:                       # OPTIONAL pause all source runtime components
+      execute: false             # OPTIONAL execute pause lifecycle operation? true|false, defaults to true
+    backup:                      # OPTIONAL create a backup of the source installation directory on the same host machine and transfer the backup archive to Command Central
+      execute: false             # OPTIONAL execute backup? true|false, defaults to false when doing migration on same hosts
+      excludes: ["*.log", "*.jar", "*.zip"] #OPTIONAL backup archive excludes, defaults to ["*.log", "*.jar", "*.zip"]
+
+  source:
+    default:
+      spm:          ["${src.spm.alias}"]
+      dbc:          ["${src.spm.alias}"]
+      #osgi-tuneup:         ["${spm.alias}"]
+      um: ["${src.spm.alias}"]
+      #infradc-tuneup:      ["${src.spm.alias}"]
+      #optimize-tuneup: ["${spm.alias}"]
+      #onedata:          ["${spm.alias}"]
+      tc: ["${spm.alias}"]
+      #cce:      ["${spm.alias}"]
+      #cloudstreams:          ["${spm.alias}"]
+      #mws:        ["${src.spm.alias}"]
+      is:          ["${src.spm.alias}"]
+  nodes:
+    default:
+      default:
+        port:   ${spm.port}
+        secure: ${spm.secure}
+        bootstrapInfo:
+          installDir:   ${src.install.dir}
+          repoName:     ${src.repo.spm}                     
+          platform:     ${os.platform}
+          distribution: ${spm.distribution}
+          useImage:     ${spm.useImage}
+          port:         ${os.port}
+          credentials:
+            userName:   ${os.username}
+            password:   ${os.password}
+            authenticationMethod: ${os.auth.method}
+            privateKey: ${os.auth.key}  
+      "${src.spm.alias}":
+         host: ${src.spm.host}
+      
 provision:
-   default:
-    spm:   ["${spm.alias}"]
-    dbc:   ["${dbc.alias}"]
-    um:    ["${spm.alias}"]
-    tc:    ["${spm.alias}"]
-    is:   ["${spm.alias}"]
- 
-
-
+  default:
+    spm:          ["${spm.alias}"]
+    dbc:          ["${spm.alias}"]
+    #osgi-tuneup:         ["${spm.alias}"]
+    um: ["${spm.alias}"]
+    #infradc-tuneup:      ["${spm.alias}"]
+    #optimize-tuneup: ["${spm.alias}"]
+    #onedata:          ["${spm.alias}"]
+    tc: ["${spm.alias}"]
+    #cce:      ["${spm.alias}"]
+    #cloudstreams:          ["${spm.alias}"]
+    #mws:        ["${spm.alias}"]
+    is:          ["${spm.alias}"]    
 
 nodes:
-   default:
+  default:
     default:
       port:   ${spm.port}
       secure: ${spm.secure}
@@ -300,40 +348,6 @@ nodes:
           password:   ${os.password}
           authenticationMethod: ${os.auth.method}
           privateKey: ${os.auth.key}
-
-
-migration:    
-   options: 
-    backup: 
-      excludes: ["*.log"] #OPTIONAL backup archive excludes, defaults to ["*.log", "*.jar", "*.zip"]               
-   source:  
-    default:
-       spm: ["${spm.alias}"]
-       dbc: ["${dbc.alias}"]
-       um:  ["${spm.alias}"]
-       tc:  ["${spm.alias}"]
-       is: ["${spm.alias}"]
-
-
-   nodes:                    
-    default:
-      default:
-#    port:   ${src.spm.port}
-#    secure: ${src.spm.secure}
-       port:   ${spm.port}
-       secure: ${spm.secure}       
-       bootstrapInfo:
-#         installDir:   ${install.dir}
-         installDir:   ${src.install.dir}         
-         repoName:     ${repo.spm}                     
-         platform:     ${os.platform}
-         distribution: ${spm.distribution}
-         useImage:     ${spm.useImage}
-         port:         ${os.port}
-         credentials:
-           userName:   ${os.username}
-           password:   ${os.password}
-           authenticationMethod: ${os.auth.method}
-           privateKey: ${os.auth.key}
-
-
+    "${spm.alias}":
+      host: ${spm.host}
+      

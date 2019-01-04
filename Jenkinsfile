@@ -88,7 +88,7 @@ pipeline {
 					}
 				}
 
-				/*stage('checkout designer'){
+				stage('checkout designer'){
 					agent{
 						label 'DesignerWin'
 					}
@@ -101,8 +101,8 @@ pipeline {
 							}
 						}
 					}
-				}*/
-				/*stage('checkout CCE project'){
+				}
+				stage('checkout CCE project'){
 					agent{
 						label 'DesignerWin'
 					}
@@ -120,9 +120,11 @@ pipeline {
 								bat 'git clone --recursive -b release/103oct2018 https://github.com/SoftwareAG/sagdevops-antcc.git antcc'
 								//bat 'dir'
 							}
+							bat 'copy C:\\CloudCheckOut\\CloudTransformCICD\\CCE\\build.xml C:\\CloudCheckOut\\command-central\\build.xml'							
+							bat 'copy C:\\CloudCheckOut\\CloudTransformCICD\\CCE\\default.properties C:\\CloudCheckOut\\command-central\\clients'
 						}
 					}
-				}*/
+				}
 			}
 		}
 		
@@ -217,7 +219,7 @@ pipeline {
 						}
 					}
 				}
-				/*stage('Installing the Designer') {
+				stage('Installing the Designer') {
 
 					agent {
 						label 'DesignerWin'
@@ -231,10 +233,9 @@ pipeline {
 							}
 						}
 					}
-				}*/
+				}
 
-				/*stage('Migrate On-Premise 912 to 10.3') {
-
+				stage('Migrate On-Premise 912 to 10.3') {
 					agent {
 						label 'DesignerWin'
 					}
@@ -242,6 +243,7 @@ pipeline {
 						script{
 							dir('C:/CloudCheckOut/command-central'){
 								echo "Start: CCE installation"
+								
 								bat 'ant boot -Dbootstrap=blr'
 								bat 'ant up'
 								echo "Completed: CCE installation"
@@ -255,8 +257,7 @@ pipeline {
 							echo "Completed: Migrate On-Premise 912 to 10.3"
 						}
 					}
-				}*/
-
+				}
 			}
 	  }
 	stage('Start servers ISUM') {

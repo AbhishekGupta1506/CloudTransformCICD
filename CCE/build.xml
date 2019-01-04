@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<project xmlns="antlib:org.apache.tools.ant" basedir="." default="up"  xmlns:if="ant:if" xmlns:unless="ant:unless" >
+	<import file="cc-server/build.xml" />
+
+	<target name="licenses" depends="waitcc,sagenvInit" description="Import licence keys">
+		<property file="${env.properties}" />
+
+		<echo if:set="licenses.zip.url">Downloading license keys .zip from: ${licenses.zip.url}</echo>
+		<mkdir dir="build/downloads" />
+		<get src="${licenses.zip.url}" dest="build/downloads/licenses.zip" usetimestamp="true" if:set="licenses.zip.url" />
+		<cc command="add license-tools keys" input="build/downloads/licenses.zip" failonerror="false" />
+		<echo>Registered license keys</echo>
+		<cc command="list license-tools keys" format="tsv"/>
+	</target>
+
+	<target name="mirrors" depends="_prepare,waitcc,sagenvInit" description="Create/update mirror repositories">
+		<property file="${env.properties}" />
+		
+		<property name="release" value="10.2" />
+		<property name="mirror.products" value="ALL" />
+		<property name="mirror.platforms" value="${platform.uppercase}" />
+		<property name="mirror.repo.product" value="webMethods-${release}_GA" />
+		<property name="mirror.repo.fix" value="intRepo" />
+		<property name="mirror.spm" value="http://localhost:8092" />
+
+		<mirror type="products" release="${release}" 
+			from="${mirror.repo.product}" filter="" 
+			artifacts="${mirror.products}" 
+			platforms="${mirror.platforms}"/>
+
+		<mirror type="fixes" release="${release}" 
+			from="${mirror.repo.fix}" 
+			filter="products-${release}" 
+			platforms="${mirror.platforms}"
+			artifacts="LATEST" />
+
+		<echo>
+			Registered product repositories
+		</echo>
+		<cc command="update repository products products-${release} location=${mirror.spm}/products-${release}/repository" format="tsv"/>
+		<cc command="list repository products" format="tsv"/>
+		
+		<echo>
+			Registered fix repositories
+		</echo>
+		<cc command="update repository fixes fixes-${release} location=${mirror.spm}/fix-fixes-${release}/repository" format="tsv"/>
+		<cc command="list repository fixes" format="tsv"/>
+	</target>
+
+	<target name="layers" depends="waitcc" description="Import and register layers" >
+		<path id="layers.list.ref">
+    		<dirset dir="library/templates" includes="*" />
+			<dirset dir="layers" includes="*" />
+  		</path>
+		<antcall target="templates">
+			<param name="templates" value="${toString:layers.list.ref}"/>
+		</antcall>
+		<antcall target="apply">
+			<param name="t" value="library/templates/sag-layer-defs"/>
+		</antcall>
+		<antcall target="apply">
+			<param name="t" value="templates/sag-layer-defs"/>
+		</antcall>				
+		<cc command="list configuration instances local OSGI-CCE-ENGINE refresh=true" format="tsv" />
+	</target>
+
+	<target name="up" depends="licenses,layers" description="Setup everything" >
+		<antcall target="apply">
+			<param name="t" value="templates/sag-creds"/>
+		</antcall>
+		<antcall target="apply">
+			<param name="t" value="templates/sag-repos-ga"/>
+		</antcall>
+		<antcall target="apply">
+			<param name="t" value="templates/sag-ldap"/>
+		</antcall>		
+		<antcall target="apply">
+			<param name="t" value="templates/sag-assets"/>
+		</antcall>
+		<antcall target="devrepos" />
+	</target>
+
+	<target name="devrepos" depends="waitcc" description="">
+		<antcall target="apply">
+			<param name="t" value="C:/CloudCheckOut/CloudTransformCICD/CCE/sag-repos-dev/template.yaml"/>
+		</antcall>
+	</target>
+
+	<target name="nodes" depends="waitcc,sagenvInit" description="Add Infrastructure nodes">
+		<property file="${env.properties}" />
+		<for list="${nodes}" param="node" delimiter="," keepgoing="true" trim="yes">
+			<sequential>
+				<cc command="add landscape nodes alias=@{node} url=http://@{node}:8092" expectedvalues="OK" />
+				<cc command="list landscape nodes @{node}" expectedvalues="ONLINE" format="tsv" wait="180" />
+			</sequential>
+		</for>
+	</target>
+	
+	<target name="stack" depends="waitcc,sagenvInit" description="Add Stack with Infrastructure nodes">
+		<property file="${env.properties}" />
+		<cc command="create stacks alias=Test release=${release}" format="tsv" />
+		<cc command="create stacks Test layers alias=Infrastructure layerType=INFRA-EXISTING nodes=${nodes}" format="tsv" />
+	</target>
+
+	<target name="oracledb" depends="waitcc,sagenvInit">
+		<antcall target="apply">
+			<param name="t" value="templates/sag-db-oracle"/>
+		</antcall>
+	</target>
+
+	<target name="composeup" depends="up,nodes" />
+
+	<target name="down" depends="waitcc,sagenvInit" description="Removes Stack and Nodes">
+		<property file="${env.properties}" />
+		<for list="${nodes}" param="node" delimiter="," keepgoing="true" trim="yes">
+			<sequential>
+				<cc command="delete landscape nodes @{node}" format="tsv" failonerror="false" />
+			</sequential>
+		</for>
+		<cc command="delete stacks Test layers Infrastructure" format="tsv" failonerror="false" />
+		<cc command="delete stacks Test" format="tsv" failonerror="false" />
+	</target>
+
+</project>
